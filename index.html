@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Dự Án Nuôi Tôi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden}
+body{font-family:'Jost',sans-serif;font-weight:300;user-select:none;-webkit-user-select:none;cursor:default;touch-action:pan-y}
+body::after{content:'';position:fixed;inset:0;z-index:9990;pointer-events:none;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:160px}
+
+#vm{display:none}#vd{display:none}
+@media(max-width:767px){#vm{display:block}#vd{display:none!important}}
+@media(min-width:768px){#vd{display:flex}#vm{display:none!important}}
+
+/* ════════════════════════════════════
+   MOBILE
+════════════════════════════════════ */
+#vm{width:100vw;height:100vh;background:#06040f;color:#f0e8d8;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;position:relative}
+#vm::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse 120% 50% at 50% 0%,rgba(168,85,247,.14) 0%,transparent 55%),
+             radial-gradient(ellipse 90% 60% at 0% 90%,rgba(200,98,42,.11) 0%,transparent 55%),
+             radial-gradient(ellipse 60% 40% at 100% 50%,rgba(61,212,122,.05) 0%,transparent 55%)}
+
+/* ─ mobile header ─ */
+.m-hd{position:relative;z-index:1;padding:48px 22px 32px;text-align:center}
+.m-pill{display:inline-flex;align-items:center;gap:7px;font-size:8.5px;letter-spacing:4px;text-transform:uppercase;color:#c8622a;border:1px solid rgba(200,98,42,.3);padding:7px 16px;border-radius:20px;margin-bottom:20px;background:rgba(200,98,42,.06);animation:pgPulse 3s ease infinite}
+@keyframes pgPulse{0%,100%{box-shadow:none}50%{box-shadow:0 0 22px rgba(200,98,42,.25)}}
+.m-pill::before{content:'';width:6px;height:6px;border-radius:50%;background:#e07840;animation:blinkDot 2s ease infinite;flex-shrink:0}
+@keyframes blinkDot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.15;transform:scale(.7)}}
+.m-ttl{font-family:'Bebas Neue',sans-serif;font-size:64px;line-height:.9;letter-spacing:2px;color:#f0e8d8;animation:fadeSlideUp .8s ease both}
+.m-ttl .sk{-webkit-text-stroke:1.5px #c8622a;color:transparent;display:block}
+@keyframes fadeSlideUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.m-sub{font-family:'Libre Baskerville',serif;font-style:italic;font-size:13px;color:rgba(240,232,216,.45);line-height:1.85;margin-top:14px;padding:0 8px;animation:fadeSlideUp .9s .15s ease both}
+
+/* ─ mobile stats ─ */
+.m-stats{display:grid;grid-template-columns:repeat(3,1fr);margin:0 16px 26px;border:1px solid rgba(200,98,42,.15);border-radius:12px;overflow:hidden;position:relative;z-index:1;background:rgba(10,5,20,.5);backdrop-filter:blur(8px)}
+.m-st{padding:16px 8px;text-align:center;border-right:1px solid rgba(200,98,42,.12);position:relative}
+.m-st:last-child{border-right:none}
+.m-sn{font-family:'Bebas Neue',sans-serif;font-size:28px;color:#e07840;display:block;line-height:1}
+.m-sl{font-size:7px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(240,232,216,.28);margin-top:3px;display:block}
+
+/* ─ mobile section label ─ */
+.m-sec{padding:0 20px 14px;font-size:8.5px;letter-spacing:5px;text-transform:uppercase;color:#c8622a;position:relative;z-index:1;display:flex;align-items:center;gap:12px}
+.m-sec::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(200,98,42,.25),transparent)}
+
+/* ─ mobile bank cards ─ */
+.m-scroll{overflow-x:auto;overflow-y:hidden;padding:0 20px 22px;display:flex;gap:13px;-webkit-overflow-scrolling:touch;scrollbar-width:none;position:relative;z-index:1}
+.m-scroll::-webkit-scrollbar{display:none}
+.m-card{flex-shrink:0;width:196px;background:rgba(14,8,26,.9);border:1px solid rgba(255,255,255,.07);border-radius:16px;overflow:hidden;backdrop-filter:blur(12px);transition:transform .3s cubic-bezier(.23,1,.32,1),box-shadow .3s}
+.m-card:active{transform:scale(.96)}
+.mc-stripe{height:3px}
+.mc-vp .mc-stripe{background:linear-gradient(90deg,transparent,#1adf6a,transparent)}
+.mc-vcb .mc-stripe{background:linear-gradient(90deg,transparent,#00b050,transparent)}
+.mc-tp .mc-stripe{background:linear-gradient(90deg,transparent,#a855f7,transparent)}
+.mc-mb .mc-stripe{background:linear-gradient(90deg,transparent,#4da3ff,transparent)}
+.mc-ms .mc-stripe{background:linear-gradient(90deg,transparent,#ff5060,transparent)}
+.mc-head{padding:12px 13px 8px;display:flex;align-items:center;gap:8px}
+.mc-ico{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:9px;flex-shrink:0}
+.mc-vp .mc-ico{background:rgba(26,223,106,.13);color:#1adf6a}
+.mc-vcb .mc-ico{background:rgba(0,176,80,.13);color:#00b050}
+.mc-tp .mc-ico{background:rgba(168,85,247,.15);color:#a855f7}
+.mc-mb .mc-ico{background:rgba(77,163,255,.13);color:#4da3ff}
+.mc-ms .mc-ico{background:rgba(255,80,96,.13);color:#ff5060}
+.mc-name{font-size:8px;letter-spacing:2.5px;text-transform:uppercase;font-weight:600;flex:1}
+.mc-vp .mc-name{color:#1adf6a}.mc-vcb .mc-name{color:#00b050}.mc-tp .mc-name{color:#a855f7}.mc-mb .mc-name{color:#4da3ff}.mc-ms .mc-name{color:#ff5060}
+.m-dlbtn{width:24px;height:24px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);border-radius:5px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .2s}
+.m-dlbtn:active{background:rgba(255,255,255,.14)}
+.m-dlbtn svg{width:11px;height:11px;color:rgba(240,232,216,.5)}
+.mc-qr{margin:0 12px 10px;height:148px;background:#fff;border-radius:9px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative}
+.mc-qr img{width:100%;height:100%;object-fit:contain;display:block}
+.mc-qrld{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;background:rgba(248,245,240,.97)}
+.mc-ring{width:20px;height:20px;border:2px solid #ddd;border-radius:50%;animation:spin .7s linear infinite}
+.mc-vp .mc-ring{border-top-color:#1adf6a}.mc-vcb .mc-ring{border-top-color:#00b050}.mc-tp .mc-ring{border-top-color:#a855f7}.mc-mb .mc-ring{border-top-color:#4da3ff}.mc-ms .mc-ring{border-top-color:#ff5060}
+.mc-qrld span{font-size:7px;letter-spacing:2px;color:#ccc;text-transform:uppercase}
+@keyframes spin{to{transform:rotate(360deg)}}
+.mc-stk{padding:0 14px 2px;font-family:'Libre Baskerville',serif;font-size:13px;font-weight:700;color:#f0e8d8;word-break:break-all;line-height:1.2}
+.mc-ctk{padding:0 14px 10px;font-size:7px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(240,232,216,.32)}
+.mc-btn{margin:0 12px 13px;width:calc(100% - 24px);display:flex;align-items:center;justify-content:center;gap:7px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:rgba(240,232,216,.5);font-family:'Jost',sans-serif;font-size:8px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;padding:9px;cursor:pointer;border-radius:7px;transition:all .25s}
+.mc-btn:active{background:rgba(255,255,255,.12);color:#f0e8d8}
+.mc-btn.ok{background:rgba(60,210,100,.1);border-color:rgba(60,210,100,.3);color:#3dd47a}
+.mc-btn svg{width:10px;height:10px}
+
+/* ─ mobile ticker ─ */
+.m-ticker-wrap{margin:0 20px 22px;border:1px solid rgba(200,98,42,.15);border-radius:12px;overflow:hidden;position:relative;z-index:1;background:rgba(10,5,20,.5)}
+.m-ticker-head{padding:10px 16px;font-size:7.5px;letter-spacing:3.5px;text-transform:uppercase;color:rgba(240,232,216,.28);border-bottom:1px solid rgba(200,98,42,.1);display:flex;align-items:center;gap:9px}
+.m-ticker-head::before{content:'';width:5px;height:5px;border-radius:50%;background:#e07840;animation:blinkDot 2s ease infinite;flex-shrink:0}
+.m-ticker-body{padding:13px 16px;height:52px;overflow:hidden;position:relative}
+.mti{position:absolute;width:calc(100% - 32px);font-family:'Libre Baskerville',serif;font-style:italic;font-size:12px;color:rgba(240,232,216,.5);line-height:1.5;transition:transform .55s cubic-bezier(.23,1,.32,1),opacity .55s}
+.mti.curr{transform:translateY(0);opacity:1}.mti.prev{transform:translateY(-100%);opacity:0}.mti.next{transform:translateY(100%);opacity:0}
+.mti strong{color:#e07840;font-style:normal}
+
+/* ─ mobile progress ─ */
+.m-prog-wrap{margin:0 20px 26px;border:1px solid rgba(200,98,42,.15);border-radius:12px;padding:18px 20px;position:relative;z-index:1;background:rgba(10,5,20,.5)}
+.m-ph{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.m-pl{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:rgba(240,232,216,.3)}
+.m-pv{font-family:'Bebas Neue',sans-serif;font-size:21px;color:#e07840}
+.m-pb{height:5px;background:rgba(200,98,42,.1);border-radius:3px;margin-bottom:8px;overflow:hidden;position:relative}
+.m-pb::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);animation:shimMob 2.5s ease-in-out infinite;transform:translateX(-100%)}
+@keyframes shimMob{0%{transform:translateX(-100%)}100%{transform:translateX(200%)}}
+.m-pf{height:100%;width:0%;border-radius:3px;background:linear-gradient(90deg,#8c3a10,#c8622a,#e07840);transition:width 2.4s cubic-bezier(.23,1,.32,1);box-shadow:0 0 12px rgba(200,98,42,.5)}
+.m-pp{display:flex;justify-content:space-between;font-size:7.5px;letter-spacing:1px;color:rgba(240,232,216,.25)}
+
+/* ─ mobile CTA card ─ */
+.m-appeal{margin:0 20px 0;position:relative;z-index:1}
+.m-cta-card{border:1px solid rgba(200,98,42,.22);border-radius:16px;overflow:hidden;background:rgba(12,6,22,.92);backdrop-filter:blur(16px);margin-bottom:14px;position:relative}
+.m-cta-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#c8622a,#a855f7,transparent)}
+.m-cta-glow{position:absolute;width:220px;height:220px;top:-70px;right:-50px;border-radius:50%;background:radial-gradient(circle,rgba(200,98,42,.18),transparent 70%);filter:blur(35px);pointer-events:none;animation:glowFloat 4.5s ease-in-out infinite}
+@keyframes glowFloat{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.12)}}
+.m-cta-body{padding:24px 20px 20px;position:relative;z-index:1}
+.m-cta-tag{font-size:7.5px;letter-spacing:4px;text-transform:uppercase;color:#c8622a;margin-bottom:13px;display:flex;align-items:center;gap:9px}
+.m-cta-tag::after{content:'';flex:1;height:1px;background:rgba(200,98,42,.18)}
+.m-cta-ttl{font-family:'Bebas Neue',sans-serif;font-size:44px;line-height:.9;letter-spacing:1.5px;color:#f0e8d8;margin-bottom:12px}
+.m-cta-ttl em{-webkit-text-stroke:1.5px #e07840;color:transparent;font-style:normal}
+.m-cta-sub{font-family:'Libre Baskerville',serif;font-style:italic;font-size:12.5px;color:rgba(240,232,216,.44);line-height:1.8}
+.m-cta-sub strong{color:#f0e8d8;font-style:normal}
+.m-ring-row{display:flex;align-items:center;gap:16px;padding:14px 20px;border-top:1px solid rgba(200,98,42,.12)}
+.m-ring-mini{position:relative;width:56px;height:56px;flex-shrink:0}
+.m-ring-mini svg{transform:rotate(-90deg)}
+.m-ring-mini-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.m-ring-mini-pct{font-family:'Bebas Neue',sans-serif;font-size:15px;color:#e07840;line-height:1}
+.m-ring-mini-lbl{font-size:5px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(240,232,216,.3)}
+.m-ring-info{flex:1}
+.m-ring-info-v{font-family:'Bebas Neue',sans-serif;font-size:24px;color:#e07840;line-height:1;display:block}
+.m-ring-info-l{font-size:7px;letter-spacing:2px;text-transform:uppercase;color:rgba(240,232,216,.28)}
+
+/* ─ mobile perk chips ─ */
+.m-perks-new{display:flex;flex-direction:column;gap:9px;padding:4px 0 16px}
+.m-perk-chip{display:flex;align-items:center;gap:13px;padding:13px 18px;border:1px solid rgba(200,98,42,.14);border-radius:11px;background:rgba(10,5,20,.65);transition:transform .2s,background .2s;position:relative;overflow:hidden}
+.m-perk-chip::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:0 2px 2px 0}
+.m-perk-chip:nth-child(1)::before{background:#e07840}
+.m-perk-chip:nth-child(2)::before{background:#a855f7}
+.m-perk-chip:nth-child(3)::before{background:#3dd47a}
+.m-perk-chip:active{transform:scale(.98);background:rgba(200,98,42,.08)}
+.m-perk-chip-ico{font-size:22px;flex-shrink:0}
+.m-perk-chip-amt{font-family:'Bebas Neue',sans-serif;font-size:17px;line-height:1;display:block}
+.m-perk-chip:nth-child(1) .m-perk-chip-amt{color:#e07840}
+.m-perk-chip:nth-child(2) .m-perk-chip-amt{color:#a855f7}
+.m-perk-chip:nth-child(3) .m-perk-chip-amt{color:#3dd47a}
+.m-perk-chip-desc{font-size:8px;letter-spacing:1px;text-transform:uppercase;color:rgba(240,232,216,.3)}
+
+/* ─ mobile thank you section — redesigned ─ */
+.m-ty-section{margin:0 0 0;position:relative;z-index:1}
+.m-ty-card{border:1px solid rgba(200,98,42,.2);border-radius:16px;overflow:hidden;background:rgba(10,5,20,.85);backdrop-filter:blur(14px);position:relative}
+.m-ty-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#3dd47a,#e07840,#a855f7,transparent)}
+.m-ty-orb1{position:absolute;width:160px;height:160px;bottom:-40px;left:-40px;border-radius:50%;background:radial-gradient(circle,rgba(61,212,122,.1),transparent 70%);filter:blur(30px);pointer-events:none;animation:glowFloat 5s 1s ease-in-out infinite}
+.m-ty-orb2{position:absolute;width:120px;height:120px;top:-30px;right:-20px;border-radius:50%;background:radial-gradient(circle,rgba(168,85,247,.12),transparent 70%);filter:blur(25px);pointer-events:none;animation:glowFloat 4s ease-in-out infinite}
+.m-ty-inner{padding:28px 22px 26px;position:relative;z-index:1;text-align:center}
+.m-ty-emoji{font-size:44px;display:block;margin-bottom:16px;animation:heartPop 2s ease-in-out infinite}
+@keyframes heartPop{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+.m-ty-eyebrow{font-size:7.5px;letter-spacing:5px;text-transform:uppercase;color:#c8622a;margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:10px}
+.m-ty-eyebrow::before,.m-ty-eyebrow::after{content:'';flex:1;max-width:50px;height:1px;background:rgba(200,98,42,.22)}
+.m-ty-headline{font-family:'Bebas Neue',sans-serif;font-size:42px;line-height:1.05;letter-spacing:2px;color:#f0e8d8;margin-bottom:14px}
+.m-ty-headline em{-webkit-text-stroke:1.5px #e07840;color:transparent;font-style:normal}
+.m-ty-body{font-family:'Libre Baskerville',serif;font-style:italic;font-size:13px;color:rgba(240,232,216,.48);line-height:1.8;margin-bottom:22px}
+.m-ty-body strong{color:#f0e8d8;font-style:normal}
+.m-ty-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(200,98,42,.1);border-radius:10px;overflow:hidden;margin-bottom:0}
+.m-ty-stat{padding:14px 8px;text-align:center;background:rgba(10,5,20,.8)}
+.m-ty-stat-n{font-family:'Bebas Neue',sans-serif;font-size:22px;color:#e07840;line-height:1;display:block}
+.m-ty-stat-l{font-size:6.5px;letter-spacing:2px;text-transform:uppercase;color:rgba(240,232,216,.28);margin-top:3px;display:block}
+
+/* ─ mobile donor wall ─ */
+.m-donor-sec{margin:16px 0 0;position:relative;z-index:1}
+.m-donor-head{padding:0 22px 14px;font-size:8.5px;letter-spacing:5px;text-transform:uppercase;color:#c8622a;display:flex;align-items:center;gap:12px}
+.m-donor-head::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(200,98,42,.25),transparent)}
+.m-donor-scroll{overflow-x:auto;padding:0 20px 4px;display:flex;flex-direction:column;gap:0;scrollbar-width:none;max-height:260px;overflow-y:auto}
+.m-donor-scroll::-webkit-scrollbar{display:none}
+.m-donor-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid rgba(200,98,42,.07);transition:background .2s}
+.m-donor-item:last-child{border-bottom:none}
+.m-donor-item:active{background:rgba(200,98,42,.05)}
+.m-donor-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:12px;color:#f0e8d8;flex-shrink:0;border:1px solid rgba(255,255,255,.08)}
+.m-donor-name{flex:1;font-size:12px;font-weight:400;color:rgba(240,232,216,.75);letter-spacing:.2px}
+.m-donor-amt{font-family:'Bebas Neue',sans-serif;font-size:14px;color:#e07840;letter-spacing:.5px}
+.m-donor-bank{font-size:7px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(240,232,216,.22)}
+
+/* ─ mobile bottom marquee ─ */
+.m-bottom-mq{overflow:hidden;position:relative;padding:22px 0 48px;border-top:1px solid rgba(200,98,42,.1);margin-top:18px}
+.m-bottom-mq::before,.m-bottom-mq::after{content:'';position:absolute;top:0;bottom:0;width:40px;z-index:2;pointer-events:none}
+.m-bottom-mq::before{left:0;background:linear-gradient(to right,#06040f,transparent)}
+.m-bottom-mq::after{right:0;background:linear-gradient(to left,#06040f,transparent)}
+.m-bottom-mq-track{display:flex;flex-wrap:nowrap;width:max-content;animation:mqScroll 28s linear infinite}
+@keyframes mqScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.m-bottom-mq-item{flex-shrink:0;display:inline-flex;align-items:center;gap:10px;padding:0 32px;font-size:9px;letter-spacing:4px;text-transform:uppercase;color:rgba(240,232,216,.18);font-family:'Jost',sans-serif;font-weight:300;white-space:nowrap}
+.m-bottom-mq-item b{color:rgba(200,98,42,.45);font-weight:400}
+.m-bottom-dot{color:rgba(200,98,42,.35);font-size:12px}
+
+/* ─ mobile touch ripple ─ */
+.m-touch-ring{position:fixed;pointer-events:none;z-index:9995;border-radius:50%;border:1.5px solid rgba(200,98,42,.6);transform:scale(0);animation:touchRing .7s ease-out forwards}
+@keyframes touchRing{0%{transform:scale(0);opacity:1}100%{transform:scale(3);opacity:0}}
+
+/* ════════════════════════════════════
+   DESKTOP  — FULL REDESIGN v8
+   Concept: Cinematic Dashboard — 
+   Top nav bar + 3-column bento grid
+════════════════════════════════════ */
+#vd{width:100vw;height:100vh;background:#05030a;color:#ede8df;overflow:hidden;flex-direction:column;position:relative}
+#vd canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* mesh background */
+#vd::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% -10%,rgba(180,70,20,.13) 0%,transparent 55%),
+    radial-gradient(ellipse 60% 50% at 85% 110%,rgba(140,58,180,.09) 0%,transparent 55%),
+    radial-gradient(ellipse 40% 40% at 60% 50%,rgba(200,90,30,.04) 0%,transparent 60%)}
+#vd::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.018;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:160px}
+
+/* ══ TOP NAV BAR ══ */
+.d-nav-bar{position:relative;z-index:10;flex-shrink:0;height:58px;border-bottom:1px solid rgba(210,120,50,.12);display:flex;align-items:center;padding:0 32px;gap:0;background:rgba(5,3,10,.88);backdrop-filter:blur(20px)}
+.d-nav-logo-wrap{display:flex;align-items:center;gap:11px;margin-right:40px;flex-shrink:0}
+.d-nav-gem{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,rgba(210,100,40,.35),rgba(160,70,200,.2));border:1px solid rgba(210,100,40,.4);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;box-shadow:0 0 18px rgba(210,100,40,.18)}
+.d-nav-gem::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 28% 28%,rgba(255,255,255,.12),transparent 60%)}
+.d-nav-gem svg{width:16px;height:16px}
+.d-nav-brand{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:4px;color:#e07840;line-height:1}
+.d-nav-sub{font-size:6px;letter-spacing:3px;text-transform:uppercase;color:rgba(237,232,223,.18);margin-top:1px}
+.d-nav-tabs{display:flex;align-items:center;gap:2px;flex:1}
+.d-nav-tab{padding:6px 16px;font-size:7.5px;letter-spacing:3.5px;text-transform:uppercase;color:rgba(237,232,223,.3);cursor:pointer;border-radius:6px;transition:all .22s;position:relative;border:1px solid transparent}
+.d-nav-tab.active,.d-nav-tab:hover{color:#e07840;background:rgba(210,100,40,.08);border-color:rgba(210,100,40,.18)}
+.d-nav-tab.active::after{content:'';position:absolute;bottom:-1px;left:16px;right:16px;height:2px;background:#e07840;border-radius:1px 1px 0 0}
+.d-nav-right{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.d-nav-live{display:flex;align-items:center;gap:7px;padding:5px 13px;border:1px solid rgba(210,100,40,.2);border-radius:20px;background:rgba(210,100,40,.06)}
+.d-nav-live-dot{width:5px;height:5px;border-radius:50%;background:#e07840;animation:blinkDot 2s ease infinite;flex-shrink:0}
+.d-nav-live-txt{font-size:6.5px;letter-spacing:3px;text-transform:uppercase;color:rgba(237,232,223,.35)}
+.d-nav-live-n{font-family:'Bebas Neue',sans-serif;font-size:16px;color:#e07840;line-height:1;margin-left:5px}
+.d-nav-pct-badge{display:flex;align-items:center;gap:6px;padding:4px 11px;border:1px solid rgba(61,212,122,.2);border-radius:20px;background:rgba(61,212,122,.06)}
+.d-nav-pct-n{font-family:'Bebas Neue',sans-serif;font-size:16px;color:#3dd47a;line-height:1}
+.d-nav-pct-l{font-size:6px;letter-spacing:2px;text-transform:uppercase;color:rgba(61,212,122,.45)}
+
+/* ══ MAIN BODY — scrollable ══ */
+.d-body{position:relative;z-index:2;flex:1;overflow-y:auto;overflow-x:hidden;padding:26px 32px 80px;scrollbar-width:thin;scrollbar-color:rgba(210,100,40,.15) transparent}
+.d-body::-webkit-scrollbar{width:4px}
+.d-body::-webkit-scrollbar-thumb{background:rgba(210,100,40,.18);border-radius:2px}
+
+/* ══ HERO STRIP ══ */
+.d-hero-strip{display:grid;grid-template-columns:1fr auto;align-items:center;gap:32px;padding:28px 36px;border-radius:18px;background:rgba(10,6,18,.7);border:1px solid rgba(210,100,40,.14);backdrop-filter:blur(16px);margin-bottom:18px;position:relative;overflow:hidden}
+.d-hero-strip::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(200,98,42,.7),rgba(168,85,247,.3),transparent)}
+.d-hero-strip-orb{position:absolute;width:400px;height:250px;top:-80px;right:-60px;border-radius:50%;background:radial-gradient(circle,rgba(200,98,42,.1),transparent 65%);filter:blur(60px);pointer-events:none;animation:orbFloat 9s ease-in-out infinite}
+@keyframes orbFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-12px) scale(1.04)}}
+.d-hero-strip-left{position:relative;z-index:1}
+.d-hero-pill{display:inline-flex;align-items:center;gap:8px;font-size:7.5px;letter-spacing:4.5px;text-transform:uppercase;color:#c8622a;border:1px solid rgba(200,98,42,.28);padding:5px 14px;border-radius:20px;margin-bottom:14px;background:rgba(200,98,42,.06)}
+.d-hero-pill::before{content:'';width:5px;height:5px;border-radius:50%;background:#e07840;animation:blinkDot 2s ease infinite}
+.d-hero-h{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,6vw,90px);line-height:.9;letter-spacing:2px;color:#ede8df}
+.d-hero-h .sk{-webkit-text-stroke:1.5px #c8622a;color:transparent;display:block}
+.d-hero-desc{font-family:'Libre Baskerville',serif;font-style:italic;font-size:13.5px;color:rgba(237,232,223,.4);line-height:1.85;max-width:420px;margin-top:13px}
+.d-hero-desc strong{color:#ede8df;font-style:normal}
+.d-hero-strip-right{position:relative;z-index:1;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.d-hero-ring-wrap{position:relative;width:110px;height:110px}
+.d-hero-ring-wrap svg{transform:rotate(-90deg)}
+.d-hero-ring-ctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.d-hero-ring-pct{font-family:'Bebas Neue',sans-serif;font-size:26px;color:#e07840;line-height:1}
+.d-hero-ring-lbl{font-size:5.5px;letter-spacing:2px;text-transform:uppercase;color:rgba(237,232,223,.28)}
+.d-hero-donors-n{font-family:'Bebas Neue',sans-serif;font-size:38px;color:#e07840;line-height:1;display:block;text-align:right}
+.d-hero-donors-l{font-size:6.5px;letter-spacing:3.5px;text-transform:uppercase;color:rgba(237,232,223,.3);text-align:right;display:block}
+
+/* ══ BENTO GRID ROW 1 ══ */
+.d-bento1{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:12px}
+.d-bento-stat{padding:18px 20px;border-radius:14px;background:rgba(10,6,18,.65);border:1px solid rgba(210,100,40,.1);backdrop-filter:blur(12px);position:relative;overflow:hidden;transition:border-color .3s,transform .3s}
+.d-bento-stat:hover{border-color:rgba(210,100,40,.28);transform:translateY(-3px)}
+.d-bento-stat::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1.5px;background:linear-gradient(90deg,transparent,rgba(210,100,40,.22),transparent);transform:scaleX(0);transform-origin:left;transition:transform .5s}
+.d-bento-stat:hover::after{transform:scaleX(1)}
+.d-bst-ico{font-size:18px;margin-bottom:9px;opacity:.7;display:block}
+.d-bst-n{font-family:'Bebas Neue',sans-serif;font-size:32px;line-height:1;color:#e07840;display:block;margin-bottom:2px}
+.d-bst-l{font-size:7px;letter-spacing:3px;text-transform:uppercase;color:rgba(237,232,223,.26)}
+
+/* ══ BENTO GRID ROW 2 — bank cards ══ */
+.d-banks-hd{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px;margin-top:8px}
+.d-banks-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(24px,3vw,38px);letter-spacing:2px;color:#ede8df}
+.d-banks-sub{font-size:7.5px;letter-spacing:4px;text-transform:uppercase;color:rgba(237,232,223,.28)}
+.d-banks-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px}
+
+/* reuse bk-* classes from below but rename */
+.db-card{position:relative;background:rgba(10,6,18,.85);border:1px solid rgba(255,255,255,.07);border-radius:14px;overflow:hidden;backdrop-filter:blur(12px);transition:transform .3s cubic-bezier(.23,1,.32,1),box-shadow .3s,border-color .3s}
+.db-card::before{content:'';position:absolute;inset:0;border-radius:14px;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.03) 0%,transparent 65%);opacity:0;transition:opacity .3s;pointer-events:none;z-index:0}
+.db-card:hover{transform:translateY(-5px) scale(1.01)}.db-card:hover::before{opacity:1}
+.db-vp:hover{border-color:rgba(26,223,106,.3);box-shadow:0 12px 36px rgba(0,0,0,.55),0 0 24px rgba(26,223,106,.1)}
+.db-vcb:hover{border-color:rgba(0,176,80,.3);box-shadow:0 12px 36px rgba(0,0,0,.55),0 0 24px rgba(0,176,80,.1)}
+.db-tp:hover{border-color:rgba(168,85,247,.35);box-shadow:0 12px 36px rgba(0,0,0,.55),0 0 24px rgba(168,85,247,.12)}
+.db-mb:hover{border-color:rgba(77,163,255,.3);box-shadow:0 12px 36px rgba(0,0,0,.55),0 0 24px rgba(77,163,255,.1)}
+.db-ms:hover{border-color:rgba(255,80,96,.3);box-shadow:0 12px 36px rgba(0,0,0,.55),0 0 24px rgba(255,80,96,.1)}
+.db-stripe{height:3px}
+.db-vp .db-stripe{background:linear-gradient(90deg,transparent,#1adf6a,transparent)}
+.db-vcb .db-stripe{background:linear-gradient(90deg,transparent,#00b050,transparent)}
+.db-tp .db-stripe{background:linear-gradient(90deg,transparent,#a855f7,transparent)}
+.db-mb .db-stripe{background:linear-gradient(90deg,transparent,#4da3ff,transparent)}
+.db-ms .db-stripe{background:linear-gradient(90deg,transparent,#ff5060,transparent)}
+.db-head{padding:11px 12px 7px;display:flex;align-items:center;gap:7px;position:relative;z-index:1}
+.db-ico{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:9px;flex-shrink:0}
+.db-vp .db-ico{background:rgba(26,223,106,.13);color:#1adf6a}.db-vcb .db-ico{background:rgba(0,176,80,.13);color:#00b050}
+.db-tp .db-ico{background:rgba(168,85,247,.15);color:#a855f7}.db-mb .db-ico{background:rgba(77,163,255,.13);color:#4da3ff}
+.db-ms .db-ico{background:rgba(255,80,96,.13);color:#ff5060}
+.db-name{font-size:7px;letter-spacing:2.5px;text-transform:uppercase;font-weight:600;flex:1}
+.db-vp .db-name{color:#1adf6a}.db-vcb .db-name{color:#00b050}.db-tp .db-name{color:#a855f7}.db-mb .db-name{color:#4da3ff}.db-ms .db-name{color:#ff5060}
+.db-dl{width:24px;height:24px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);border-radius:5px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .2s;position:relative;z-index:1}
+.db-dl:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2)}
+.db-dl svg{width:10px;height:10px;color:rgba(237,232,223,.5)}
+.db-qw{margin:0 10px 8px;position:relative}
+.db-qf{position:relative;height:130px;border-radius:7px;overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center}
+.db-qf img{width:100%;height:100%;object-fit:contain;display:block}
+.db-ql{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;background:rgba(248,245,240,.97)}
+.db-qr{width:18px;height:18px;border:2px solid #ddd;border-radius:50%;animation:spin .7s linear infinite}
+.db-vp .db-qr{border-top-color:#1adf6a}.db-vcb .db-qr{border-top-color:#00b050}.db-tp .db-qr{border-top-color:#a855f7}.db-mb .db-qr{border-top-color:#4da3ff}.db-ms .db-qr{border-top-color:#ff5060}
+.db-ql span{font-size:6.5px;letter-spacing:2px;color:#bbb;text-transform:uppercase}
+.db-vp .db-qf{--qc:#1adf6a}.db-vcb .db-qf{--qc:#00b050}.db-tp .db-qf{--qc:#a855f7}.db-mb .db-qf{--qc:#4da3ff}.db-ms .db-qf{--qc:#ff5060}
+.db-qf::before{content:'';position:absolute;top:3px;left:3px;width:12px;height:12px;border-top:2px solid var(--qc);border-left:2px solid var(--qc);z-index:2;opacity:0;transition:opacity .3s}
+.db-qf::after{content:'';position:absolute;top:3px;right:3px;width:12px;height:12px;border-top:2px solid var(--qc);border-right:2px solid var(--qc);z-index:2;opacity:0;transition:opacity .3s}
+.db-card:hover .db-qf::before,.db-card:hover .db-qf::after{opacity:1}
+.db-scan{position:absolute;left:0;right:0;height:2px;top:0;background:linear-gradient(90deg,transparent,var(--qc,rgba(200,98,42,.5)),transparent);animation:qsc 2.5s ease-in-out infinite;opacity:0;z-index:3;pointer-events:none}
+.db-card:hover .db-scan{opacity:1}
+.db-stk{padding:0 12px 2px;font-family:'Libre Baskerville',serif;font-size:12px;font-weight:700;color:#ede8df;word-break:break-all;line-height:1.2;position:relative;z-index:1}
+.db-ctk{padding:0 12px 9px;font-size:6.5px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(237,232,223,.28);position:relative;z-index:1}
+.db-btn{margin:0 10px 11px;width:calc(100% - 20px);display:flex;align-items:center;justify-content:center;gap:6px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.03);color:rgba(237,232,223,.4);font-family:'Jost',sans-serif;font-size:7px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;padding:8px;cursor:pointer;border-radius:6px;transition:all .25s;position:relative;z-index:1}
+.db-btn:hover{background:rgba(255,255,255,.08);color:#ede8df;border-color:rgba(255,255,255,.14)}
+.db-btn.ok{background:rgba(60,210,100,.1);border-color:rgba(60,210,100,.3);color:#3dd47a}
+.db-btn svg{width:10px;height:10px}
+
+/* ══ BENTO ROW 3 — 3 columns ══ */
+.d-bento3{display:grid;grid-template-columns:1fr 1fr 320px;gap:12px;margin-bottom:12px}
+
+/* progress panel */
+.d-prog-panel{border:1px solid rgba(210,100,40,.15);border-radius:14px;padding:24px 26px;background:rgba(10,6,18,.68);backdrop-filter:blur(14px);position:relative;overflow:hidden}
+.d-prog-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(210,100,40,.5),transparent)}
+.d-prog-panel-orb{position:absolute;width:220px;height:220px;bottom:-80px;right:-60px;border-radius:50%;background:radial-gradient(circle,rgba(210,100,40,.09),transparent 70%);filter:blur(40px);pointer-events:none}
+.d-prog-tag{font-size:7px;letter-spacing:4.5px;text-transform:uppercase;color:#c8622a;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.d-prog-tag::after{content:'';flex:1;height:1px;background:rgba(210,100,40,.18)}
+.d-prog-ring-row{display:flex;align-items:center;gap:22px;margin-bottom:22px}
+.d-prog-ring{position:relative;width:90px;height:90px;flex-shrink:0}
+.d-prog-ring svg{transform:rotate(-90deg)}
+.d-prog-ring-ctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.d-prog-ring-pct{font-family:'Bebas Neue',sans-serif;font-size:22px;color:#e07840;line-height:1}
+.d-prog-ring-lbl{font-size:5px;letter-spacing:2px;text-transform:uppercase;color:rgba(237,232,223,.3)}
+.d-prog-info{flex:1}
+.d-prog-vnd{font-family:'Bebas Neue',sans-serif;font-size:30px;color:#e07840;line-height:1;display:block}
+.d-prog-vnd-l{font-size:6.5px;letter-spacing:2px;text-transform:uppercase;color:rgba(237,232,223,.25)}
+.d-prog-bar-wrap{margin-top:0}
+.d-prog-bar{height:5px;background:rgba(210,100,40,.1);border-radius:3px;overflow:hidden;margin-bottom:7px;position:relative}
+.d-prog-bar::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);animation:shimD 2.5s ease-in-out infinite;transform:translateX(-100%)}
+.d-prog-fill{height:100%;width:0%;border-radius:3px;background:linear-gradient(90deg,#7c2e08,#c8622a,#e07840);transition:width 2.4s cubic-bezier(.23,1,.32,1);box-shadow:0 0 10px rgba(210,100,40,.45)}
+.d-prog-labels{display:flex;justify-content:space-between;font-size:6.5px;letter-spacing:1px;color:rgba(237,232,223,.22)}
+
+/* ticker panel */
+.d-ticker-panel{border:1px solid rgba(210,100,40,.13);border-radius:14px;padding:22px 24px;background:rgba(10,6,18,.65);backdrop-filter:blur(14px);display:flex;flex-direction:column}
+.d-ticker-tag{font-size:7px;letter-spacing:4px;text-transform:uppercase;color:#c8622a;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.d-ticker-tag::before{content:'';width:5px;height:5px;border-radius:50%;background:#e07840;animation:blinkDot 2s ease infinite;flex-shrink:0}
+.d-ticker-tag::after{content:'';flex:1;height:1px;background:rgba(210,100,40,.15)}
+.d-ticker-body{flex:1;height:44px;overflow:hidden;position:relative;border-left:2px solid rgba(200,98,42,.35);padding-left:14px}
+.dti{position:absolute;width:100%;font-family:'Libre Baskerville',serif;font-style:italic;font-size:12px;color:rgba(237,232,223,.48);line-height:1.55;transition:transform .55s cubic-bezier(.23,1,.32,1),opacity .55s}
+.dti.curr{transform:translateY(0);opacity:1}.dti.prev{transform:translateY(-100%);opacity:0}.dti.next{transform:translateY(100%);opacity:0}
+.dti strong{color:#e07840;font-style:normal}
+.d-ticker-feed{margin-top:16px;flex:1;overflow:hidden}
+.d-ticker-feed-ttl{font-size:6.5px;letter-spacing:3px;text-transform:uppercase;color:rgba(237,232,223,.2);margin-bottom:9px}
+#d-feed{display:flex;flex-direction:column;gap:6px;overflow:hidden}
+.d-fi{font-size:7.5px;line-height:1.7;color:rgba(237,232,223,.28);padding:7px 10px;border:1px solid rgba(210,100,40,.08);border-radius:7px;background:rgba(10,5,18,.65)}
+.d-fi strong{color:#e07840;display:block;font-size:9px;font-weight:600;margin-bottom:1px}
+.d-fi-meta{display:flex;gap:8px;align-items:center;margin-top:2px}
+.d-fi-amt{color:#e07840;font-family:'Bebas Neue',sans-serif;font-size:13px;line-height:1}
+.d-fi-time{color:rgba(237,232,223,.2);font-size:6.5px;letter-spacing:1.5px;text-transform:uppercase}
+
+/* badges panel */
+.d-badges-panel{border:1px solid rgba(210,100,40,.13);border-radius:14px;padding:22px 22px;background:rgba(10,6,18,.65);backdrop-filter:blur(14px)}
+.d-badges-tag{font-size:7px;letter-spacing:4px;text-transform:uppercase;color:#c8622a;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.d-badges-tag::after{content:'';flex:1;height:1px;background:rgba(210,100,40,.15)}
+.d-badge-item{display:flex;align-items:center;gap:11px;padding:11px 13px;border:1px solid rgba(210,100,40,.09);border-radius:10px;background:rgba(10,5,18,.55);margin-bottom:8px;transition:all .25s}
+.d-badge-item:last-child{margin-bottom:0}
+.d-badge-item:hover{border-color:rgba(210,100,40,.22);background:rgba(14,8,24,.8)}
+.d-badge-ico{font-size:16px;flex-shrink:0}
+.d-badge-txt{font-size:7.5px;letter-spacing:.5px;text-transform:uppercase;color:rgba(237,232,223,.25);line-height:1.5}
+.d-badge-txt strong{display:block;color:rgba(237,232,223,.48);font-weight:500;margin-bottom:1px;font-size:8px}
+.d-perk-list{margin-top:12px;display:flex;flex-direction:column;gap:7px}
+.d-perk{display:flex;align-items:center;gap:10px;padding:8px 11px;border-radius:8px;border:1px solid rgba(210,100,40,.09);background:rgba(10,5,18,.45)}
+.d-perk-ico{font-size:14px;flex-shrink:0}
+.d-perk-amt{font-family:'Bebas Neue',sans-serif;font-size:15px;line-height:1;display:block}
+.d-perk:nth-child(1) .d-perk-amt{color:#e07840}
+.d-perk:nth-child(2) .d-perk-amt{color:#a855f7}
+.d-perk:nth-child(3) .d-perk-amt{color:#3dd47a}
+.d-perk-desc{font-size:7px;letter-spacing:.5px;text-transform:uppercase;color:rgba(237,232,223,.27)}
+
+/* ══ BENTO ROW 4 — thanks + donors + contact ══ */
+.d-bento4{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+
+/* thanks card */
+.d-thanks-card{border:1px solid rgba(210,100,40,.18);border-radius:14px;overflow:hidden;position:relative;background:rgba(10,6,18,.75);backdrop-filter:blur(14px)}
+.d-thanks-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(61,212,122,.4),rgba(210,100,40,.4),rgba(168,85,247,.3),transparent)}
+.d-thanks-orb{position:absolute;width:200px;height:200px;top:-50px;right:30px;border-radius:50%;background:radial-gradient(circle,rgba(210,100,40,.1),transparent 70%);filter:blur(45px);pointer-events:none;animation:orbFloat 7s ease-in-out infinite}
+.d-thanks-inner{padding:30px 32px;position:relative;z-index:1}
+.d-thanks-emoji{font-size:36px;display:block;margin-bottom:14px;animation:heartPop 2.5s ease-in-out infinite}
+.d-thanks-tag{font-size:7px;letter-spacing:5px;text-transform:uppercase;color:#c8622a;display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.d-thanks-tag::after{content:'';flex:1;height:1px;background:rgba(210,100,40,.15)}
+.d-thanks-h{font-family:'Bebas Neue',sans-serif;font-size:clamp(30px,3.2vw,48px);line-height:1;letter-spacing:2px;color:#ede8df;margin-bottom:11px}
+.d-thanks-h em{-webkit-text-stroke:1.5px #e07840;color:transparent;font-style:normal}
+.d-thanks-body{font-family:'Libre Baskerville',serif;font-style:italic;font-size:13px;line-height:1.9;color:rgba(237,232,223,.4)}
+.d-thanks-body strong{color:#ede8df;font-style:normal}
+.d-thanks-badges{display:flex;gap:9px;margin-top:18px}
+.d-tbadge{flex:1;padding:11px;border:1px solid rgba(210,100,40,.13);border-radius:9px;background:rgba(14,8,24,.8);text-align:center;transition:all .3s}
+.d-tbadge:hover{border-color:rgba(210,100,40,.3);background:rgba(18,10,30,.9)}
+.d-tbadge-ico{font-size:17px;display:block;margin-bottom:5px}
+.d-tbadge-v{font-family:'Bebas Neue',sans-serif;font-size:18px;color:#e07840;line-height:1;display:block}
+.d-tbadge-l{font-size:6px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(237,232,223,.28);display:block;margin-top:2px}
+
+/* donor wall */
+.d-donor-card{border:1px solid rgba(210,100,40,.13);border-radius:14px;overflow:hidden;background:rgba(10,6,18,.7);display:flex;flex-direction:column;backdrop-filter:blur(14px)}
+.d-donor-hd{padding:18px 20px 14px;border-bottom:1px solid rgba(210,100,40,.1);display:flex;align-items:center;gap:10px}
+.d-donor-hd-title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1.5px;color:#ede8df}
+.d-donor-hd-badge{margin-left:auto;font-size:6.5px;letter-spacing:3px;text-transform:uppercase;color:rgba(210,100,40,.55);border:1px solid rgba(210,100,40,.2);padding:3px 9px;border-radius:20px}
+.d-donor-list{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(210,100,40,.15) transparent;max-height:280px}
+.d-donor-list::-webkit-scrollbar{width:3px}
+.d-donor-list::-webkit-scrollbar-thumb{background:rgba(210,100,40,.18);border-radius:2px}
+.d-donor-item{display:flex;align-items:center;gap:11px;padding:9px 18px;border-bottom:1px solid rgba(210,100,40,.06);transition:background .2s}
+.d-donor-item:last-child{border-bottom:none}
+.d-donor-item:hover{background:rgba(210,100,40,.04)}
+.d-donor-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:11px;color:#ede8df;flex-shrink:0;border:1px solid rgba(255,255,255,.07)}
+.d-donor-name{flex:1;font-size:11.5px;color:rgba(237,232,223,.65);letter-spacing:.2px}
+.d-donor-right{text-align:right}
+.d-donor-amt{font-family:'Bebas Neue',sans-serif;font-size:14px;color:#e07840;line-height:1;display:block}
+.d-donor-bank{font-size:6.5px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(237,232,223,.22)}
+
+/* ══ CONTACT STRIP ══ */
+.d-contact-strip{border:1px solid rgba(210,100,40,.16);border-radius:14px;padding:24px 30px;background:rgba(10,6,18,.7);margin-bottom:12px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:24px;position:relative;overflow:hidden;backdrop-filter:blur(14px)}
+.d-contact-strip::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 80% at 90% 50%,rgba(168,85,247,.06),transparent 60%);pointer-events:none}
+.d-contact-strip::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(100,181,246,.3),transparent)}
+.d-contact-left{position:relative;z-index:1}
+.d-contact-tag{font-size:7px;letter-spacing:5px;text-transform:uppercase;color:#c8622a;margin-bottom:9px;display:flex;align-items:center;gap:10px}
+.d-contact-tag::after{content:'';flex:1;height:1px;background:rgba(210,100,40,.15)}
+.d-contact-h{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1.5px;color:#ede8df;margin-bottom:6px}
+.d-contact-sub{font-size:12px;color:rgba(237,232,223,.35);letter-spacing:.2px}
+.d-contact-right{position:relative;z-index:1}
+.d-tg-btn{display:flex;align-items:center;gap:10px;padding:13px 22px;border:1px solid rgba(100,181,246,.28);border-radius:10px;background:rgba(100,181,246,.06);color:#64b5f6;font-family:'Jost',sans-serif;font-size:9.5px;font-weight:500;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all .3s;text-decoration:none;position:relative;overflow:hidden}
+.d-tg-btn:hover{border-color:rgba(100,181,246,.5);box-shadow:0 0 22px rgba(100,181,246,.16);transform:translateY(-2px)}
+.d-tg-ico{width:22px;height:22px;flex-shrink:0}
+.d-tg-handle{font-family:'Bebas Neue',sans-serif;font-size:18px;color:#64b5f6;letter-spacing:2px}
+.d-tg-slbl{font-size:6.5px;letter-spacing:2.5px;color:rgba(100,181,246,.4);text-transform:uppercase}
+
+/* ══ COPYRIGHT FOOTER MARQUEE ══ */
+.d-footer-mq{position:fixed;bottom:0;left:0;right:0;z-index:50;overflow:hidden;height:32px;display:flex;align-items:center;border-top:1px solid rgba(210,100,40,.1);background:rgba(5,3,10,.94);backdrop-filter:blur(16px)}
+.d-footer-mq::before,.d-footer-mq::after{content:'';position:absolute;top:0;bottom:0;width:80px;z-index:2;pointer-events:none}
+.d-footer-mq::before{left:0;background:linear-gradient(to right,rgba(5,3,10,.95),transparent)}
+.d-footer-mq::after{right:0;background:linear-gradient(to left,rgba(5,3,10,.95),transparent)}
+.d-footer-mq-track{display:flex;flex-wrap:nowrap;width:max-content;animation:footerMqScroll 30s linear infinite}
+@keyframes footerMqScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.d-footer-mq-item{flex-shrink:0;display:inline-flex;align-items:center;gap:16px;padding:0 48px;font-size:9px;letter-spacing:5px;text-transform:uppercase;color:rgba(237,232,223,.18);font-family:'Jost',sans-serif;font-weight:300;white-space:nowrap}
+.d-footer-mq-item b{color:rgba(200,98,42,.5);font-weight:400}
+.d-footer-sep{color:rgba(200,98,42,.32);font-size:10px}
+
+
+/* ─ shared ─ */
+#tg-float{position:fixed;bottom:22px;left:22px;z-index:500;width:52px;height:52px;border-radius:50%;background:rgba(7,5,15,.95);border:1.5px solid rgba(100,181,246,.4);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .35s cubic-bezier(.23,1,.32,1);box-shadow:0 0 20px rgba(100,181,246,.12);text-decoration:none}
+#tg-float:hover{transform:scale(1.12);border-color:rgba(100,181,246,.7);box-shadow:0 0 36px rgba(100,181,246,.28)}
+#tg-float svg{width:22px;height:22px;pointer-events:none;transition:transform .3s}
+#tg-float:hover svg{transform:rotate(-8deg) scale(1.1)}
+.tg-ring{position:absolute;border-radius:50%;border:1px solid rgba(100,181,246,.2);animation:tgRing 2.4s ease-out infinite;pointer-events:none}
+.tg-ring.r1{inset:-6px;animation-delay:0s}.tg-ring.r2{inset:-13px;animation-delay:.7s;opacity:.5}
+@keyframes tgRing{0%{transform:scale(.9);opacity:.7}100%{transform:scale(1.6);opacity:0}}
+#tg-tooltip{position:absolute;left:62px;bottom:50%;transform:translateY(50%);background:rgba(7,5,15,.96);border:1px solid rgba(100,181,246,.25);color:#64b5f6;font-family:'Jost',sans-serif;font-size:9px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;padding:6px 14px;border-radius:8px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .25s;box-shadow:0 4px 20px rgba(0,0,0,.4)}
+#tg-float:hover #tg-tooltip{opacity:1}
+#mplayer{position:fixed;bottom:22px;right:22px;z-index:300;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+#mbtn{width:44px;height:44px;border-radius:50%;background:rgba(7,5,15,.95);border:1px solid rgba(200,98,42,.42);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s;box-shadow:0 0 18px rgba(200,98,42,.14);position:relative}
+#mbtn:hover{transform:scale(1.08);box-shadow:0 0 28px rgba(200,98,42,.26)}
+#mbtn svg{width:16px;height:16px;color:#e07840;pointer-events:none}
+.mr{position:absolute;border-radius:50%;border:1px solid rgba(200,98,42,.28);animation:mr 2s ease infinite;display:none}
+.mr.r1{inset:-5px}.mr.r2{inset:-12px;animation-delay:.6s;opacity:.5}.mr.r3{inset:-19px;animation-delay:1.1s;opacity:.2}
+@keyframes mr{0%{transform:scale(.95);opacity:.8}100%{transform:scale(1.5);opacity:0}}
+#mbtn.on .mr{display:block}
+#mlbl{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:#e07840;background:rgba(7,5,15,.92);border:1px solid rgba(200,98,42,.2);padding:4px 10px;border-radius:20px;opacity:0;transition:opacity .4s;pointer-events:none;white-space:nowrap}
+#toast{position:fixed;bottom:22px;left:50%;z-index:400;transform:translateX(-50%) translateY(70px);background:rgba(7,5,15,.97);border:1px solid #c8622a;color:#e07840;font-family:'Jost',sans-serif;font-size:9px;font-weight:500;letter-spacing:3px;text-transform:uppercase;padding:10px 20px;transition:transform .4s cubic-bezier(.23,1,.32,1);pointer-events:none}
+#toast.on{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════
+     MOBILE
+════════════════════════════════════ -->
+<div id="vm">
+  <div class="m-hd">
+    <div class="m-pill">Kêu Gọi Đóng Góp · 2026</div>
+    <div class="m-ttl">CHUNG TAY<span class="sk">DONATE</span></div>
+    <p class="m-sub">Dự án miễn phí, xây dựng vì bản thân tôi.<br>Mỗi đóng góp nhỏ đều có ý nghĩa lớn.</p>
+  </div>
+
+  <div class="m-stats">
+    <div class="m-st"><span class="m-sn" id="ms1">0</span><span class="m-sl">Hảo tâm</span></div>
+    <div class="m-st"><span class="m-sn" id="ms2">0</span><span class="m-sl">Donate</span></div>
+    <div class="m-st"><span class="m-sn" id="ms3">0</span><span class="m-sl">Tr VNĐ</span></div>
+  </div>
+
+  <div class="m-sec">Chọn ngân hàng</div>
+  <div class="m-scroll">
+    <div class="m-card mc-vp">
+      <div class="mc-stripe"></div>
+      <div class="mc-head"><div class="mc-ico">VP</div><span class="mc-name">VPBank</span>
+        <button class="m-dlbtn" onclick="dlQR('mq0','VPBank')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+      </div>
+      <div class="mc-qr" id="mq0"><div class="mc-qrld"><div class="mc-ring"></div><span>Đang tải</span></div></div>
+      <div class="mc-stk">34567.66778899</div><div class="mc-ctk">CTK: DAO DANG KHOA</div>
+      <button class="mc-btn" onclick="doCopy('3456766778899',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Sao chép</button>
+    </div>
+    <div class="m-card mc-vcb">
+      <div class="mc-stripe"></div>
+      <div class="mc-head"><div class="mc-ico">VCB</div><span class="mc-name">Vietcombank</span>
+        <button class="m-dlbtn" onclick="dlQR('mq1','VCB')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+      </div>
+      <div class="mc-qr" id="mq1"><div class="mc-qrld"><div class="mc-ring"></div><span>Đang tải</span></div></div>
+      <div class="mc-stk">1065332169</div><div class="mc-ctk">CTK: DAO DANG KHOA</div>
+      <button class="mc-btn" onclick="doCopy('1065332169',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Sao chép</button>
+    </div>
+    <div class="m-card mc-tp">
+      <div class="mc-stripe"></div>
+      <div class="mc-head"><div class="mc-ico">TP</div><span class="mc-name">TPBank</span>
+        <button class="m-dlbtn" onclick="dlQR('mq2','TPBank')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+      </div>
+      <div class="mc-qr" id="mq2"><div class="mc-qrld"><div class="mc-ring"></div><span>Đang tải</span></div></div>
+      <div class="mc-stk">456.2468.3579</div><div class="mc-ctk">CTK: DAO DANG KHOA</div>
+      <button class="mc-btn" onclick="doCopy('45624683579',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Sao chép</button>
+    </div>
+    <div class="m-card mc-mb">
+      <div class="mc-stripe"></div>
+      <div class="mc-head"><div class="mc-ico">MB</div><span class="mc-name">MBBank</span>
+        <button class="m-dlbtn" onclick="dlQR('mq3','MBBank')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+      </div>
+      <div class="mc-qr" id="mq3"><div class="mc-qrld"><div class="mc-ring"></div><span>Đang tải</span></div></div>
+      <div class="mc-stk">88888888.777</div><div class="mc-ctk">CTK: DAO DANG KHOA</div>
+      <button class="mc-btn" onclick="doCopy('88888888777',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Sao chép</button>
+    </div>
+    <div class="m-card mc-ms">
+      <div class="mc-stripe"></div>
+      <div class="mc-head"><div class="mc-ico">MSB</div><span class="mc-name">MSB</span>
+        <button class="m-dlbtn" onclick="dlQR('mq4','MSB')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+      </div>
+      <div class="mc-qr" id="mq4"><div class="mc-qrld"><div class="mc-ring"></div><span>Đang tải</span></div></div>
+      <div class="mc-stk">3524042009</div><div class="mc-ctk">CTK: DAO DANG KHOA</div>
+      <button class="mc-btn" onclick="doCopy('3524042009',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Sao chép</button>
+    </div>
+  </div>
+
+  <!-- ticker -->
+  <div class="m-ticker-wrap">
+    <div class="m-ticker-head">Vừa được ủng hộ</div>
+    <div class="m-ticker-body">
+      <div class="mti curr" id="mt0"></div>
+      <div class="mti next" id="mt1"></div>
+    </div>
+  </div>
+
+  <!-- progress -->
+  <div class="m-prog-wrap">
+    <div class="m-ph"><span class="m-pl">Tiến độ</span><span class="m-pv" id="mpval">0 ₫</span></div>
+    <div class="m-pb"><div class="m-pf" id="mpfill"></div></div>
+    <div class="m-pp"><span>0 ₫</span><span id="mppct">0%</span><span>1 tỷ ₫</span></div>
+  </div>
+
+  <!-- appeal -->
+  <div class="m-appeal">
+    <div class="m-cta-card">
+      <div class="m-cta-glow"></div>
+      <div class="m-cta-body">
+        <div class="m-cta-tag">Vì sao ủng hộ chúng tôi</div>
+        <div class="m-cta-ttl">MỖI ĐỒNG<br>GÓP NHỎ<br><em>CÓ Ý NGHĨA</em></div>
+        <p class="m-cta-sub">Dự án <strong>hoàn toàn miễn phí</strong>, xây dựng với tâm huyết. Mỗi đóng góp trực tiếp <strong>nuôi sống dự án,cụ thể là nuôi sống tôi.</strong>.</p>
+      </div>
+      <div class="m-ring-row">
+        <div class="m-ring-mini">
+          <svg width="56" height="56" viewBox="0 0 56 56">
+            <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(200,98,42,.12)" stroke-width="4"/>
+            <circle cx="28" cy="28" r="22" fill="none" stroke="#e07840" stroke-width="4" stroke-linecap="round"
+              stroke-dasharray="138" stroke-dashoffset="138" id="mRingFg" style="transition:stroke-dashoffset 2.8s cubic-bezier(.23,1,.32,1)"/>
+          </svg>
+          <div class="m-ring-mini-center">
+            <div class="m-ring-mini-pct" id="mRingPct">0%</div>
+            <div class="m-ring-mini-lbl">mục tiêu</div>
+          </div>
+        </div>
+        <div class="m-ring-info">
+          <span class="m-ring-info-v" id="mRingVnd">0</span>
+          <span class="m-ring-info-l">Triệu VNĐ đã nhận</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- perk chips -->
+    <div class="m-perks-new">
+      <div class="m-perk-chip"><span class="m-perk-chip-ico">☕</span><div><span class="m-perk-chip-amt">10K – 50K ₫</span><div class="m-perk-chip-desc">Đủ tiền 2 ly trà sữa</div></div></div>
+      <div class="m-perk-chip"><span class="m-perk-chip-ico">🚀</span><div><span class="m-perk-chip-amt">100K – 500K ₫</span><div class="m-perk-chip-desc">Chơi net thả ga</div></div></div>
+      <div class="m-perk-chip"><span class="m-perk-chip-ico">💎</span><div><span class="m-perk-chip-amt">1.000.000+ ₫</span><div class="m-perk-chip-desc">Liên hệ tôi gọi là bố luôn</div></div></div>
+    </div>
+
+    <!-- THANK YOU — redesigned clean -->
+    <div class="m-ty-section">
+      <div class="m-ty-card">
+        <div class="m-ty-orb1"></div>
+        <div class="m-ty-orb2"></div>
+        <div class="m-ty-inner">
+          <span class="m-ty-emoji">💛</span>
+          <div class="m-ty-eyebrow">Từ tận đáy lòng</div>
+          <div class="m-ty-headline">CẢM ƠN<br>VÌ ĐÃ <em>ỦNG HỘ</em></div>
+          <p class="m-ty-body">Mỗi đóng góp của bạn, dù <strong>10.000 ₫ hay 5.000.000 ₫</strong>, đều là nguồn động lực để chúng tôi tiếp tục xây dựng dự án miễn phí này,bịp đó thực ra là nuôi tôi.</p>
+          <div class="m-ty-stats">
+            <div class="m-ty-stat"><span class="m-ty-stat-n" id="mty1">0</span><span class="m-ty-stat-l">Hảo tâm</span></div>
+            <div class="m-ty-stat"><span class="m-ty-stat-n" id="mty2">0</span><span class="m-ty-stat-l">Ủng hộ</span></div>
+            <div class="m-ty-stat"><span class="m-ty-stat-n">312</span><span class="m-ty-stat-l">Ngày HĐ</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- donor wall mobile -->
+    <div class="m-donor-sec">
+      <div class="m-donor-head">Nhà hảo tâm</div>
+      <div class="m-donor-scroll" id="m-donor-list"></div>
+    </div>
+
+  </div><!-- /m-appeal -->
+
+  <div class="m-bottom-mq">
+    <div class="m-bottom-mq-track">
+      <span class="m-bottom-mq-item">Dự án thuộc bản quyền của <b>Khoadz</b> <span class="m-bottom-dot">•</span> 2026</span>
+      <span class="m-bottom-mq-item">Dự án thuộc bản quyền của <b>Khoadz</b> <span class="m-bottom-dot">•</span> 2026</span>
+      <span class="m-bottom-mq-item">Dự án thuộc bản quyền của <b>Khoadz</b> <span class="m-bottom-dot">•</span> 2026</span>
+      <span class="m-bottom-mq-item">Dự án thuộc bản quyền của <b>Khoadz</b> <span class="m-bottom-dot">•</span> 2026</span>
+      <span class="m-bottom-mq-item">Dự án thuộc bản quyền của <b>Khoadz</b> <span class="m-bottom-dot">•</span> 2026</span>
+      <span class="m-bottom-mq-item">Dự án thuộc bản quyền của <b>Khoadz</b> <span class="m-bottom-dot">•</span> 2026</span>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     DESKTOP — v8 BENTO REDESIGN
+════════════════════════════════════ -->
+<div id="vd">
+  <canvas id="dcanv"></canvas>
+
+  <!-- TOP NAV -->
+  <nav class="d-nav-bar">
+    <div class="d-nav-logo-wrap">
+      <div class="d-nav-gem">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="#e07840" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div><div class="d-nav-brand">DONATE</div><div class="d-nav-sub">Khoadz · 2026</div></div>
+    </div>
+    <div class="d-nav-tabs">
+      <div class="d-nav-tab active">Tổng quan</div>
+      <div class="d-nav-tab">Chuyển khoản</div>
+      <div class="d-nav-tab">Tiến độ</div>
+      <div class="d-nav-tab">Cảm ơn</div>
+    </div>
+    <div class="d-nav-right">
+      <div class="d-nav-live">
+        <div class="d-nav-live-dot"></div>
+        <span class="d-nav-live-txt">Phật sống 👌</span>
+        <span class="d-nav-live-n" id="sb-live-n">0</span>
+      </div>
+      <div class="d-nav-pct-badge">
+        <span class="d-nav-pct-n" id="dppct">0%</span>
+        <span class="d-nav-pct-l">Mục tiêu</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- SCROLLABLE BODY -->
+  <div class="d-body">
+
+    <!-- HERO STRIP -->
+    <div class="d-hero-strip">
+      <div class="d-hero-strip-orb"></div>
+      <div class="d-hero-strip-left">
+        <div class="d-hero-pill">Kêu Gọi Đóng Góp · 2026</div>
+        <div class="d-hero-h">CHUNG TAY<span class="sk">DONATE</span></div>
+        <p class="d-hero-desc">Dự án <strong>hoàn toàn miễn phí</strong>, xây dựng vì bản thân tôi.<br>Mỗi đóng góp là nguồn sống để chúng tôi tiếp tục.</p>
+      </div>
+      <div class="d-hero-strip-right">
+        <div class="d-hero-ring-wrap">
+          <svg width="110" height="110" viewBox="0 0 110 110">
+            <defs><linearGradient id="heroRingGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#7c2e08"/><stop offset="50%" stop-color="#c8622a"/><stop offset="100%" stop-color="#e07840"/>
+            </linearGradient></defs>
+            <circle cx="55" cy="55" r="46" fill="none" stroke="rgba(200,98,42,.1)" stroke-width="5"/>
+            <circle cx="55" cy="55" r="46" fill="none" stroke="url(#heroRingGrad)" stroke-width="5" stroke-linecap="round"
+              stroke-dasharray="289" stroke-dashoffset="289" id="heroRingFg" style="transition:stroke-dashoffset 2.8s cubic-bezier(.23,1,.32,1)"/>
+          </svg>
+          <div class="d-hero-ring-ctr">
+            <div class="d-hero-ring-pct" id="heroRingPct">0%</div>
+            <div class="d-hero-ring-lbl">Mục tiêu</div>
+          </div>
+        </div>
+        <span class="d-hero-donors-n" id="dhnum">0</span>
+        <span class="d-hero-donors-l">Người ủng hộ</span>
+      </div>
+    </div>
+
+    <!-- BENTO ROW 1 — Stats -->
+    <div class="d-bento1">
+      <div class="d-bento-stat"><span class="d-bst-ico">🏆</span><span class="d-bst-n" id="ds1">0</span><span class="d-bst-l">Nhà hảo tâm</span></div>
+      <div class="d-bento-stat"><span class="d-bst-ico">💛</span><span class="d-bst-n" id="ds2">0</span><span class="d-bst-l">Lượt donate</span></div>
+      <div class="d-bento-stat"><span class="d-bst-ico">💰</span><span class="d-bst-n" id="ds3">0</span><span class="d-bst-l">Triệu VNĐ đã nhận</span></div>
+      <div class="d-bento-stat"><span class="d-bst-ico">📅</span><span class="d-bst-n">312</span><span class="d-bst-l">Ngày hoạt động</span></div>
+    </div>
+
+    <!-- BANK CARDS -->
+    <div class="d-banks-hd">
+      <div class="d-banks-title">CHỌN NGÂN HÀNG</div>
+      <div class="d-banks-sub">5 phương thức chuyển khoản</div>
+    </div>
+    <div class="d-banks-grid">
+      <!-- VPBank -->
+      <div class="db-card db-vp" onmousemove="this.style.setProperty('--mx',((event.clientX-this.getBoundingClientRect().left)/this.offsetWidth*100)+'%');this.style.setProperty('--my',((event.clientY-this.getBoundingClientRect().top)/this.offsetHeight*100)+'%')">
+        <div class="db-stripe"></div>
+        <div class="db-head"><div class="db-ico">VP</div><span class="db-name">VPBank</span>
+          <button class="db-dl" onclick="dlQR('dq0','VPBank')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+        </div>
+        <div class="db-qw"><div class="db-qf" id="dq0"><div class="db-ql"><div class="db-qr"></div><span>Đang tải</span></div><div class="db-scan"></div></div></div>
+        <div class="db-stk">34567.66778899</div><div class="db-ctk">CTK: DAO DANG KHOA</div>
+        <button class="db-btn" onclick="doCopy('3456766778899',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Sao chép</button>
+      </div>
+      <!-- Vietcombank -->
+      <div class="db-card db-vcb" onmousemove="this.style.setProperty('--mx',((event.clientX-this.getBoundingClientRect().left)/this.offsetWidth*100)+'%');this.style.setProperty('--my',((event.clientY-this.getBoundingClientRect().top)/this.offsetHeight*100)+'%')">
+        <div class="db-stripe"></div>
+        <div class="db-head"><div class="db-ico">VCB</div><span class="db-name">Vietcombank</span>
+          <button class="db-dl" onclick="dlQR('dq1','VCB')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+        </div>
+        <div class="db-qw"><div class="db-qf" id="dq1"><div class="db-ql"><div class="db-qr"></div><span>Đang tải</span></div><div class="db-scan"></div></div></div>
+        <div class="db-stk">1065332169</div><div class="db-ctk">CTK: DAO DANG KHOA</div>
+        <button class="db-btn" onclick="doCopy('1065332169',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Sao chép</button>
+      </div>
+      <!-- TPBank -->
+      <div class="db-card db-tp" onmousemove="this.style.setProperty('--mx',((event.clientX-this.getBoundingClientRect().left)/this.offsetWidth*100)+'%');this.style.setProperty('--my',((event.clientY-this.getBoundingClientRect().top)/this.offsetHeight*100)+'%')">
+        <div class="db-stripe"></div>
+        <div class="db-head"><div class="db-ico">TP</div><span class="db-name">TPBank</span>
+          <button class="db-dl" onclick="dlQR('dq2','TPBank')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+        </div>
+        <div class="db-qw"><div class="db-qf" id="dq2"><div class="db-ql"><div class="db-qr"></div><span>Đang tải</span></div><div class="db-scan"></div></div></div>
+        <div class="db-stk">456.2468.3579</div><div class="db-ctk">CTK: DAO DANG KHOA</div>
+        <button class="db-btn" onclick="doCopy('45624683579',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Sao chép</button>
+      </div>
+      <!-- MBBank -->
+      <div class="db-card db-mb" onmousemove="this.style.setProperty('--mx',((event.clientX-this.getBoundingClientRect().left)/this.offsetWidth*100)+'%');this.style.setProperty('--my',((event.clientY-this.getBoundingClientRect().top)/this.offsetHeight*100)+'%')">
+        <div class="db-stripe"></div>
+        <div class="db-head"><div class="db-ico">MB</div><span class="db-name">MBBank</span>
+          <button class="db-dl" onclick="dlQR('dq3','MBBank')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+        </div>
+        <div class="db-qw"><div class="db-qf" id="dq3"><div class="db-ql"><div class="db-qr"></div><span>Đang tải</span></div><div class="db-scan"></div></div></div>
+        <div class="db-stk">88888888.777</div><div class="db-ctk">CTK: DAO DANG KHOA</div>
+        <button class="db-btn" onclick="doCopy('88888888777',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Sao chép</button>
+      </div>
+      <!-- MSB -->
+      <div class="db-card db-ms" onmousemove="this.style.setProperty('--mx',((event.clientX-this.getBoundingClientRect().left)/this.offsetWidth*100)+'%');this.style.setProperty('--my',((event.clientY-this.getBoundingClientRect().top)/this.offsetHeight*100)+'%')">
+        <div class="db-stripe"></div>
+        <div class="db-head"><div class="db-ico">MSB</div><span class="db-name">MSB</span>
+          <button class="db-dl" onclick="dlQR('dq4','MSB')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+        </div>
+        <div class="db-qw"><div class="db-qf" id="dq4"><div class="db-ql"><div class="db-qr"></div><span>Đang tải</span></div><div class="db-scan"></div></div></div>
+        <div class="db-stk">3524042009</div><div class="db-ctk">CTK: DAO DANG KHOA</div>
+        <button class="db-btn" onclick="doCopy('3524042009',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Sao chép</button>
+      </div>
+    </div>
+
+    <!-- BENTO ROW 3 — Progress | Ticker | Badges -->
+    <div class="d-bento3">
+      <!-- Progress Panel -->
+      <div class="d-prog-panel">
+        <div class="d-prog-panel-orb"></div>
+        <div class="d-prog-tag">Tiến độ mục tiêu</div>
+        <div class="d-prog-ring-row">
+          <div class="d-prog-ring">
+            <svg width="90" height="90" viewBox="0 0 90 90">
+              <defs><linearGradient id="progRingGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#7c2e08"/><stop offset="100%" stop-color="#e07840"/>
+              </linearGradient></defs>
+              <circle cx="45" cy="45" r="38" fill="none" stroke="rgba(200,98,42,.1)" stroke-width="5"/>
+              <circle cx="45" cy="45" r="38" fill="none" stroke="url(#progRingGrad)" stroke-width="5" stroke-linecap="round"
+                stroke-dasharray="239" stroke-dashoffset="239" id="dRingFg" style="transition:stroke-dashoffset 2.8s cubic-bezier(.23,1,.32,1)"/>
+            </svg>
+            <div class="d-prog-ring-ctr">
+              <div class="d-prog-ring-pct" id="dRingPct">0%</div>
+              <div class="d-prog-ring-lbl">hoàn thành</div>
+            </div>
+          </div>
+          <div class="d-prog-info">
+            <span class="d-prog-vnd" id="dRingVnd">0</span>
+            <span class="d-prog-vnd-l">Triệu VNĐ đã nhận</span>
+          </div>
+        </div>
+        <div class="d-prog-bar-wrap">
+          <div class="d-prog-bar"><div class="d-prog-fill" id="dpfill"></div></div>
+          <div class="d-prog-labels"><span>0 ₫</span><span id="dpval">0 ₫</span><span>1 tỷ ₫</span></div>
+        </div>
+      </div>
+
+      <!-- Ticker + Feed Panel -->
+      <div class="d-ticker-panel">
+        <div class="d-ticker-tag">Vừa được ủng hộ</div>
+        <div class="d-ticker-body">
+          <div class="dti curr" id="dt0"></div>
+          <div class="dti next" id="dt1"></div>
+        </div>
+        <div class="d-ticker-feed">
+          <div class="d-ticker-feed-ttl">Lịch sử gần đây</div>
+          <div id="d-feed"></div>
+        </div>
+      </div>
+
+      <!-- Badges + Perks Panel -->
+      <div class="d-badges-panel">
+        <div class="d-badges-tag">Cam kết của chúng tôi</div>
+        <div class="d-badge-item"><span class="d-badge-ico">🔒</span><div class="d-badge-txt"><strong>Uy tín tuyệt đối</strong>Sao kê rõ ràng</div></div>
+        <div class="d-badge-item"><span class="d-badge-ico">✓</span><div class="d-badge-txt"><strong>Lời kêu gọi</strong>Không ép buộc</div></div>
+        <div class="d-badge-item"><span class="d-badge-ico">⚡</span><div class="d-badge-txt"><strong>Phản hồi nhanh</strong>Hỗ trợ 24/7 qua Telegram</div></div>
+        <div class="d-perk-list">
+          <div class="d-perk"><span class="d-perk-ico">☕</span><div><span class="d-perk-amt">10K – 50K ₫</span><div class="d-perk-desc">Đủ tiền 2 ly trà sữa</div></div></div>
+          <div class="d-perk"><span class="d-perk-ico">🚀</span><div><span class="d-perk-amt">100K – 500K ₫</span><div class="d-perk-desc">Chơi net thả ga</div></div></div>
+          <div class="d-perk"><span class="d-perk-ico">💎</span><div><span class="d-perk-amt">1.000.000+ ₫</span><div class="d-perk-desc">Liên hệ tôi gọi là bố luôn</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BENTO ROW 4 — Thanks + Donors -->
+    <div class="d-bento4">
+      <!-- Thanks Card -->
+      <div class="d-thanks-card">
+        <div class="d-thanks-orb"></div>
+        <div class="d-thanks-inner">
+          <span class="d-thanks-emoji">💛</span>
+          <div class="d-thanks-tag">Từ tận đáy lòng</div>
+          <div class="d-thanks-h">CẢM ƠN VÌ ĐÃ <em>ỦNG HỘ</em></div>
+          <p class="d-thanks-body">Mỗi đóng góp của bạn, dù <strong>10.000 ₫ hay 5.000.000 ₫</strong>, đều là nguồn động lực để chúng tôi tiếp tục xây dựng dự án miễn phí này,mục đính chính là nuôi tôi.</p>
+          <div class="d-thanks-badges">
+            <div class="d-tbadge"><span class="d-tbadge-ico">🏆</span><span class="d-tbadge-v" id="dty1">0</span><span class="d-tbadge-l">Hảo tâm</span></div>
+            <div class="d-tbadge"><span class="d-tbadge-ico">💛</span><span class="d-tbadge-v" id="dty2">0</span><span class="d-tbadge-l">Lượt ủng hộ</span></div>
+            <div class="d-tbadge"><span class="d-tbadge-ico">📅</span><span class="d-tbadge-v">312</span><span class="d-tbadge-l">Ngày HĐ</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Donor Wall -->
+      <div class="d-donor-card">
+        <div class="d-donor-hd">
+          <div class="d-donor-hd-title">Nhà Hảo Tâm</div>
+          <div class="d-donor-hd-badge" id="d-donor-count">0 người</div>
+        </div>
+        <div class="d-donor-list" id="d-donor-list"></div>
+      </div>
+    </div>
+
+    <!-- CONTACT STRIP -->
+    <div class="d-contact-strip">
+      <div class="d-contact-left">
+        <div class="d-contact-tag">Liên hệ hỗ trợ</div>
+        <div class="d-contact-h">CẦN HỖ TRỢ? NHẮN TIN NGAY</div>
+        <div class="d-contact-sub">Phản hồi trong vòng 5 phút · Hỗ trợ 24/7</div>
+      </div>
+      <div class="d-contact-right">
+        <a class="d-tg-btn" href="https://t.me/meta5757" target="_blank">
+          <svg class="d-tg-ico" viewBox="0 0 24 24" fill="none">
+            <path d="M22 2L11 13" stroke="#64b5f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="#64b5f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div><div class="d-tg-handle">@meta5757</div><div class="d-tg-slbl">Nhắn tin Telegram</div></div>
+        </a>
+      </div>
+    </div>
+
+  </div><!-- /d-body -->
+
+  <!-- FIXED COPYRIGHT FOOTER MARQUEE -->
+  <div class="d-footer-mq">
+    <div class="d-footer-mq-track">
+      <span class="d-footer-mq-item">Bản quyền thuộc về <b>Khoadz</b> <span class="d-footer-sep">©</span> 2026 <span class="d-footer-sep">·</span> All Rights Reserved <span class="d-footer-sep">·</span></span>
+      <span class="d-footer-mq-item">Dự án hoàn toàn miễn phí <span class="d-footer-sep">·</span> Xây dựng bởi <b>Khoadz</b> <span class="d-footer-sep">·</span> 2026 <span class="d-footer-sep">·</span></span>
+      <span class="d-footer-mq-item">Bản quyền thuộc về <b>Khoadz</b> <span class="d-footer-sep">©</span> 2026 <span class="d-footer-sep">·</span> All Rights Reserved <span class="d-footer-sep">·</span></span>
+      <span class="d-footer-mq-item">Dự án hoàn toàn miễn phí <span class="d-footer-sep">·</span> Xây dựng bởi <b>Khoadz</b> <span class="d-footer-sep">·</span> 2026 <span class="d-footer-sep">·</span></span>
+    </div>
+  </div>
+
+</div>
+
+<a id="tg-float" href="https://t.me/meta5757" target="_blank">
+  <div class="tg-ring r1"></div><div class="tg-ring r2"></div>
+  <div id="tg-tooltip">@meta5757 · Nhắn tin</div>
+  <svg viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13" stroke="#64b5f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="#64b5f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</a>
+<div id="mplayer">
+  <div id="mlbl">♪ Nhạc nền</div>
+  <div id="mbtn" onclick="toggleMusic()">
+    <div class="mr r1"></div><div class="mr r2"></div><div class="mr r3"></div>
+    <svg id="mico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+  </div>
+</div>
+<audio id="bgm" loop><source src="music.mp3" type="audio/mpeg"></audio>
+<div id="toast"></div>
+
+<script>
+/* ── ANTI-DEVTOOLS ── */
+(function(){
+  'use strict';const W=window,D=document,noop=()=>{};
+  D.addEventListener('keydown',e=>{if(e.keyCode===123){e.preventDefault();e.stopImmediatePropagation();return false}if(e.ctrlKey&&e.shiftKey&&[73,74,67,75,69].includes(e.keyCode)){e.preventDefault();e.stopImmediatePropagation();return false}if(e.ctrlKey&&[85,80,83].includes(e.keyCode)){e.preventDefault();return false}},true);
+  D.addEventListener('contextmenu',e=>{e.preventDefault();return false},true);
+  D.addEventListener('selectstart',e=>e.preventDefault());
+  D.addEventListener('dragstart',e=>e.preventDefault());
+  (function dt(){try{(function(){}['constructor']('debugger')())}catch(_){}setTimeout(dt,100)})();
+  const fc=new Proxy({},{get:()=>noop});try{Object.defineProperty(W,'console',{get:()=>fc,set:noop,configurable:false})}catch(_){}
+  setInterval(()=>{try{(function(){}['constructor']('debugger')())}catch(_){}},1200);
+  W.addEventListener('beforeprint',e=>{e.preventDefault();return false});
+})();
+
+/* ── CANVAS PARTICLES (desktop) ── */
+(function(){
+  const c=document.getElementById('dcanv');if(!c)return;
+  const ctx=c.getContext('2d');let W,H,pts=[];
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight}
+  function mk(){return{x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.4+.2,vx:(Math.random()-.5)*.28,vy:-Math.random()*.42-.07,a:Math.random()*.2+.04,l:Math.random(),purple:Math.random()<.18}}
+  resize();addEventListener('resize',resize);
+  for(let i=0;i<100;i++){const p=mk();p.y=Math.random()*H;pts.push(p)}
+  function frame(){ctx.clearRect(0,0,W,H);pts.forEach((p,i)=>{p.x+=p.vx;p.y+=p.vy;p.l-=.0018;if(p.l<=0||p.y<-10){pts[i]=mk();pts[i].y=H+8;return}const a=p.a*Math.min(p.l*2.2,1);ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=p.purple?`rgba(168,85,247,${a*.7})`:`rgba(200,98,42,${a})`;ctx.fill()});requestAnimationFrame(frame)}
+  frame();
+})();
+
+/* ── 100 DONORS DATA ── */
+const DONORS=[
+  {name:'Nguyễn Minh Tuấn',amt:50000,bank:'VPBank'},{name:'Trần Thu Hương',amt:100000,bank:'VCB'},
+  {name:'Lê Văn Phong',amt:20000,bank:'MBBank'},{name:'Phạm Quỳnh Anh',amt:200000,bank:'TPBank'},
+  {name:'Võ Thành Nam',amt:500000,bank:'MSB'},{name:'Đặng Minh Châu',amt:30000,bank:'VCB'},
+  {name:'Hoàng Thị Lan',amt:150000,bank:'VPBank'},{name:'Bùi Đức Huy',amt:1000000,bank:'MBBank'},
+  {name:'Ngô Thị Mai',amt:75000,bank:'TPBank'},{name:'Đinh Văn Tú',amt:250000,bank:'MSB'},
+  {name:'Lương Thị Ngọc',amt:40000,bank:'VCB'},{name:'Phan Minh Khải',amt:2000000,bank:'VPBank'},
+  {name:'Vũ Thu Trang',amt:80000,bank:'MBBank'},{name:'Hồ Xuân Dũng',amt:300000,bank:'TPBank'},
+  {name:'Trương Ngọc Linh',amt:60000,bank:'VCB'},{name:'Đỗ Thanh Hà',amt:120000,bank:'MSB'},
+  {name:'Bùi Thị Kim Oanh',amt:500000,bank:'VPBank'},{name:'Cao Văn Tùng',amt:35000,bank:'MBBank'},
+  {name:'Lê Thị Bình',amt:5000000,bank:'VCB'},{name:'Nguyễn Đức Thắng',amt:90000,bank:'TPBank'},
+  {name:'Phạm Hoàng Long',amt:180000,bank:'MSB'},{name:'Trịnh Thị Thu',amt:25000,bank:'VPBank'},
+  {name:'Dương Văn Khánh',amt:400000,bank:'MBBank'},{name:'Mai Thị Hoa',amt:70000,bank:'VCB'},
+  {name:'Lý Minh Quân',amt:1500000,bank:'TPBank'},{name:'Ngô Thị Phương',amt:55000,bank:'MSB'},
+  {name:'Huỳnh Văn Đạt',amt:110000,bank:'VPBank'},{name:'Tô Thị Xuân',amt:220000,bank:'MBBank'},
+  {name:'Bùi Quang Vinh',amt:45000,bank:'VCB'},{name:'Lê Thị Hồng',amt:750000,bank:'TPBank'},
+  {name:'Đặng Văn Hiếu',amt:15000,bank:'MSB'},{name:'Nguyễn Thị Thúy',amt:180000,bank:'VPBank'},
+  {name:'Trần Minh Đức',amt:320000,bank:'MBBank'},{name:'Vũ Thị Lệ',amt:65000,bank:'VCB'},
+  {name:'Phạm Văn Toàn',amt:2500000,bank:'TPBank'},{name:'Hoàng Thị Dung',amt:48000,bank:'MSB'},
+  {name:'Lưu Văn Sơn',amt:130000,bank:'VPBank'},{name:'Chu Thị Hằng',amt:280000,bank:'MBBank'},
+  {name:'Tạ Minh Hùng',amt:95000,bank:'VCB'},{name:'Nguyễn Thị Loan',amt:450000,bank:'TPBank'},
+  {name:'Trần Quốc Bảo',amt:22000,bank:'MSB'},{name:'Lê Văn Hải',amt:160000,bank:'VPBank'},
+  {name:'Phạm Thị Nhung',amt:380000,bank:'MBBank'},{name:'Vũ Hoàng Nam',amt:85000,bank:'VCB'},
+  {name:'Đỗ Thị Lan',amt:600000,bank:'TPBank'},{name:'Ngô Văn Lực',amt:33000,bank:'MSB'},
+  {name:'Hà Thị Giang',amt:210000,bank:'VPBank'},{name:'Bùi Văn Trọng',amt:470000,bank:'MBBank'},
+  {name:'Cao Thị Mỹ',amt:58000,bank:'VCB'},{name:'Lý Văn Hậu',amt:1200000,bank:'TPBank'},
+  {name:'Đinh Thị Thảo',amt:37000,bank:'MSB'},{name:'Phan Văn Tài',amt:195000,bank:'VPBank'},
+  {name:'Trương Thị Thu',amt:340000,bank:'MBBank'},{name:'Dương Minh Tuấn',amt:72000,bank:'VCB'},
+  {name:'Mai Văn Hưng',amt:810000,bank:'TPBank'},{name:'Nguyễn Thị Hạnh',amt:28000,bank:'MSB'},
+  {name:'Lê Minh Tú',amt:145000,bank:'VPBank'},{name:'Phạm Văn Phú',amt:260000,bank:'MBBank'},
+  {name:'Trần Thị Ngân',amt:92000,bank:'VCB'},{name:'Võ Văn Hòa',amt:3000000,bank:'TPBank'},
+  {name:'Đặng Thị Liễu',amt:43000,bank:'MSB'},{name:'Hoàng Văn Kỳ',amt:170000,bank:'VPBank'},
+  {name:'Bùi Thị Nhung',amt:390000,bank:'MBBank'},{name:'Ngô Minh Tùng',amt:63000,bank:'VCB'},
+  {name:'Hồ Thị Yến',amt:550000,bank:'TPBank'},{name:'Tô Văn Minh',amt:18000,bank:'MSB'},
+  {name:'Lưu Thị Kim',amt:230000,bank:'VPBank'},{name:'Chu Văn Dũng',amt:420000,bank:'MBBank'},
+  {name:'Tạ Thị Mai',amt:77000,bank:'VCB'},{name:'Nguyễn Văn Lộc',amt:980000,bank:'TPBank'},
+  {name:'Trần Thị Bích',amt:32000,bank:'MSB'},{name:'Lê Thị Cúc',amt:155000,bank:'VPBank'},
+  {name:'Phạm Minh Hiếu',amt:295000,bank:'MBBank'},{name:'Vũ Thị Thương',amt:88000,bank:'VCB'},
+  {name:'Đỗ Văn Tuấn',amt:4000000,bank:'TPBank'},{name:'Ngô Thị Kim Anh',amt:52000,bank:'MSB'},
+  {name:'Hà Văn Bình',amt:175000,bank:'VPBank'},{name:'Bùi Minh Sang',amt:310000,bank:'MBBank'},
+  {name:'Cao Thị Xuân',amt:67000,bank:'VCB'},{name:'Lý Thị Hoa',amt:720000,bank:'TPBank'},
+  {name:'Đinh Văn Nam',amt:27000,bank:'MSB'},{name:'Phan Thị Huyền',amt:185000,bank:'VPBank'},
+  {name:'Trương Văn Toàn',amt:360000,bank:'MBBank'},{name:'Dương Thị Hương',amt:82000,bank:'VCB'},
+  {name:'Mai Văn Đức',amt:1800000,bank:'TPBank'},{name:'Nguyễn Thị Thanh',amt:38000,bank:'MSB'},
+  {name:'Lê Văn Bảo',amt:140000,bank:'VPBank'},{name:'Phạm Thị Kim Chi',amt:270000,bank:'MBBank'},
+  {name:'Trần Văn Giang',amt:97000,bank:'VCB'},{name:'Võ Thị Bông',amt:650000,bank:'TPBank'},
+  {name:'Đặng Văn Phú',amt:14000,bank:'MSB'},{name:'Hoàng Minh Đức',amt:200000,bank:'VPBank'},
+  {name:'Bùi Thị Thu Hà',amt:430000,bank:'MBBank'},{name:'Ngô Văn Thiện',amt:68000,bank:'VCB'},
+  {name:'Hồ Thị Thanh Thủy',amt:850000,bank:'TPBank'},{name:'Tô Minh Khoa',amt:10000,bank:'MSB'},
+];
+
+/* avatar colors */
+const AV_COLORS=['#e07840','#a855f7','#3dd47a','#4da3ff','#ff5060','#fbbf24','#34d399','#f472b6'];
+function avColor(name){let h=0;for(let c of name)h=(h*31+c.charCodeAt(0))&0xffff;return AV_COLORS[h%AV_COLORS.length]}
+function avInitial(name){const p=name.trim().split(' ');return p[p.length-1][0]||'?'}
+function fmtAmt(v){return v>=1000000?(v/1000000).toFixed(v%1000000===0?0:1)+'M ₫':v>=1000?(v/1000).toFixed(0)+'K ₫':v+'  ₫'}
+function fmtAmtFull(v){return v.toLocaleString('vi-VN')+'  ₫'}
+function mkTickHTML(t){return `<strong>${t.name}</strong> vừa ủng hộ <strong>${fmtAmtFull(t.amt)}</strong> qua ${t.bank}`}
+
+/* ── Build donor lists ── */
+function buildDonorLists(){
+  // Desktop
+  const dl=document.getElementById('d-donor-list');
+  if(dl){
+    DONORS.forEach(d=>{
+      const el=document.createElement('div');el.className='d-donor-item';
+      const bg=avColor(d.name);
+      el.innerHTML=`<div class="d-donor-av" style="background:${bg}22;border-color:${bg}33">${avInitial(d.name)}</div><div class="d-donor-name">${d.name}</div><div class="d-donor-right"><span class="d-donor-amt">${fmtAmt(d.amt)}</span><span class="d-donor-bank">${d.bank}</span></div>`;
+      dl.appendChild(el);
+    });
+  }
+  // Mobile
+  const ml=document.getElementById('m-donor-list');
+  if(ml){
+    DONORS.forEach(d=>{
+      const el=document.createElement('div');el.className='m-donor-item';
+      const bg=avColor(d.name);
+      el.innerHTML=`<div class="m-donor-avatar" style="background:${bg}22;border-color:${bg}33">${avInitial(d.name)}</div><span class="m-donor-name">${d.name}</span><div style="text-align:right"><div class="m-donor-amt">${fmtAmt(d.amt)}</div><div class="m-donor-bank">${d.bank}</div></div>`;
+      ml.appendChild(el);
+    });
+  }
+}
+buildDonorLists();
+
+/* ── VIETQR ── */
+const BANKS=[
+  {bin:'970432',acct:'3456766778899'},{bin:'970436',acct:'1065332169'},
+  {bin:'970423',acct:'45624683579'},{bin:'970422',acct:'88888888777'},{bin:'970426',acct:'3524042009'},
+];
+function loadQR(id,b,delay){
+  setTimeout(()=>{
+    const el=document.getElementById(id);if(!el)return;
+    const url=`https://img.vietqr.io/image/${b.bin}-${b.acct}-compact2.png?addInfo=Donate+ung+ho+du+an&accountName=DAO+DANG+KHOA`;
+    const img=new Image();
+    img.onload=()=>{el.querySelector('.bk-ql,.mc-qrld,.db-ql')?.remove();img.style.cssText='width:100%;height:100%;object-fit:contain;display:block';el.appendChild(img)};
+    img.onerror=()=>{
+      const fb=new Image();
+      fb.src=`https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent('https://vietqr.io/'+b.bin+'/'+b.acct)}&bgcolor=ffffff&color=000000&margin=14`;
+      fb.onload=()=>{el.querySelector('.bk-ql,.mc-qrld,.db-ql')?.remove();fb.style.cssText='width:100%;height:100%;object-fit:contain;display:block';el.appendChild(fb)};
+      fb.onerror=()=>{el.innerHTML='<div style="font-size:7px;color:#bbb;text-align:center;padding:14px;text-transform:uppercase;letter-spacing:1.5px;font-family:Jost,sans-serif;line-height:2">Sao chép STK<br>để chuyển khoản</div>'};
+    };
+    img.src=url;
+  },delay);
+}
+BANKS.forEach((b,i)=>{loadQR('mq'+i,b,280+i*190);loadQR('dq'+i,b,320+i*190)});
+
+function dlQR(frameId,bankName){
+  const el=document.getElementById(frameId);if(!el)return;
+  const img=el.querySelector('img');if(!img){showToast('QR chưa tải xong');return}
+  const a=document.createElement('a');a.href=img.src;a.download=`QR_${bankName}_DAO_DANG_KHOA.png`;a.click();
+  showToast('↓ Đang tải QR '+bankName);
+}
+
+/* ── MUSIC ── */
+const audio=document.getElementById('bgm'),mbtn=document.getElementById('mbtn'),mico=document.getElementById('mico'),mlbl=document.getElementById('mlbl');
+let playing=false;audio.volume=0.25;
+const IP='<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>';
+const PP='<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+function startMusic(){audio.play().then(()=>{playing=true;mbtn.classList.add('on');mico.innerHTML=PP;mlbl.style.opacity='1';setTimeout(()=>mlbl.style.opacity='0',3000)}).catch(()=>{})}
+function toggleMusic(){if(!playing){startMusic()}else{audio.pause();playing=false;mbtn.classList.remove('on');mico.innerHTML=IP;mlbl.style.opacity='0'}}
+let at=false;document.addEventListener('click',()=>{if(!at&&!playing){at=true;startMusic()}},{once:true});
+
+/* ── COPY ── */
+function doCopy(val,btn){
+  const orig=btn.innerHTML;
+  const ok=()=>{btn.classList.add('ok');btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Đã sao chép!';setTimeout(()=>{btn.classList.remove('ok');btn.innerHTML=orig},2600);showToast('✓ '+val)};
+  navigator.clipboard.writeText(val).then(ok).catch(()=>{const t=document.createElement('textarea');t.value=val;t.style.cssText='position:fixed;opacity:0;pointer-events:none';document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);ok()});
+}
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),3000)}
+
+/* ── LIVE STATE ── */
+let totalDonors=1247,totalDonates=3589,totalVND=47000000,liveIdx=0;
+const MAX_VND=1000000000;
+
+function fmtNum(v){return Math.floor(v).toLocaleString('vi-VN')}
+function setEl(id,val,sfx){const el=document.getElementById(id);if(el)el.textContent=fmtNum(val)+(sfx||'')}
+
+/* counters */
+function ctr(id,tgt,sfx,ms){const el=document.getElementById(id);if(!el)return;let v=0;const s=tgt/(ms/16);const t=setInterval(()=>{v+=s;if(v>=tgt){v=tgt;clearInterval(t)}el.textContent=fmtNum(v)+(sfx||'')},16)}
+setTimeout(()=>{
+  ctr('ms1',totalDonors,'+',2000);ctr('ms2',totalDonates,'',2200);ctr('ms3',Math.round(totalVND/1000000),'',1800);
+  ctr('dhnum',totalDonors,'+',2000);ctr('ds1',totalDonors,'+',2000);ctr('ds2',totalDonates,'',2200);ctr('ds3',Math.round(totalVND/1000000),'',1800);
+  ctr('dty1',totalDonors,'',2000);ctr('dty2',totalDonates,'',2200);
+  ctr('mty1',totalDonors,'',2000);ctr('mty2',totalDonates,'',2200);
+},600);
+
+/* progress */
+function startProg(){
+  setTimeout(()=>{
+    const mf=document.getElementById('mpfill'),mv=document.getElementById('mpval'),mp=document.getElementById('mppct');
+    const df=document.getElementById('dpfill'),dv=document.getElementById('dpval'),dp=document.getElementById('dppct');
+    let v=0;const target=totalVND;
+    const t=setInterval(()=>{v+=target/110;if(v>=target){v=target;clearInterval(t)}const p=Math.round(v/MAX_VND*100);
+      if(mf)mf.style.width=p+'%';if(mv)mv.textContent=Math.floor(v).toLocaleString('vi-VN')+' ₫';if(mp)mp.textContent=p+'%';
+      if(df)df.style.width=p+'%';if(dv)dv.textContent=Math.floor(v).toLocaleString('vi-VN')+' ₫';if(dp)dp.textContent=p+'%';
+    },22);
+  },1400);
+}
+startProg();
+
+/* live donation loop */
+function fireDonation(){
+  const tick=DONORS[liveIdx%DONORS.length];liveIdx++;
+  totalDonors+=Math.random()<.3?1:0;totalDonates++;totalVND+=tick.amt;
+  setEl('ms1',totalDonors,'+');setEl('ms2',totalDonates,'');setEl('ms3',Math.round(totalVND/1000000),'');
+  setEl('dhnum',totalDonors,'+');setEl('ds1',totalDonors,'+');setEl('ds2',totalDonates,'');setEl('ds3',Math.round(totalVND/1000000),'');
+  setEl('dtb1',totalDonors,'');setEl('dtb2',totalDonates,'');
+  setEl('mty1',totalDonors,'');setEl('mty2',totalDonates,'');
+  const p=Math.min(Math.round(totalVND/MAX_VND*100),100);
+  ['mpfill','dpfill'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.width=p+'%'});
+  ['mpval','dpval'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=totalVND.toLocaleString('vi-VN')+' ₫'});
+  ['mppct','dppct'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=p+'%'});
+  if(mt0&&mt1){
+    mt1.innerHTML=mkTickHTML(tick);mt1.className='mti next';mt0.className='mti curr';
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{mt0.className='mti prev';mt1.className='mti curr';setTimeout(()=>{mt0.innerHTML=mkTickHTML(DONORS[liveIdx%DONORS.length]);mt0.className='mti next'},650)}));
+  }
+  if(dt0&&dt1){
+    dt1.innerHTML=mkTickHTML(tick);dt1.className='dti next';dt0.className='dti curr';
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{dt0.className='dti prev';dt1.className='dti curr';setTimeout(()=>{dt0.innerHTML=mkTickHTML(DONORS[(liveIdx+1)%DONORS.length]);dt0.className='dti next'},650)}));
+  }
+  addFeed(tick);
+  syncSidebar(p);
+  setTimeout(fireDonation,2500+Math.random()*4500);
+}
+const mt0=document.getElementById('mt0'),mt1=document.getElementById('mt1');
+const dt0=document.getElementById('dt0'),dt1=document.getElementById('dt1');
+if(mt0)mt0.innerHTML=mkTickHTML(DONORS[0]);
+if(dt0)dt0.innerHTML=mkTickHTML(DONORS[0]);
+setTimeout(fireDonation,3500);
+
+/* sidebar feed */
+const dfeed=document.getElementById('d-feed');
+function addFeed(t){
+  if(!dfeed)return;
+  const d=document.createElement('div');d.className='d-fi';
+  const ts=new Date().toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'});
+  const bg=avColor(t.name);
+  d.innerHTML=`<strong>${t.name}</strong><div class="d-fi-meta"><span class="d-fi-amt">${fmtAmt(t.amt)}</span><span class="d-fi-time">${ts}</span></div>`;
+  d.style.cssText='opacity:0;transform:translateX(-10px);transition:all .4s cubic-bezier(.23,1,.32,1)';
+  dfeed.insertBefore(d,dfeed.firstChild);
+  requestAnimationFrame(()=>{d.style.opacity='1';d.style.transform='translateX(0)'});
+  if(dfeed.children.length>4)dfeed.removeChild(dfeed.lastChild);
+}
+DONORS.slice(0,3).forEach((t,i)=>setTimeout(()=>addFeed(t),700+i*300));
+
+/* sidebar sync */
+function syncSidebar(pct){
+  const liveN=document.getElementById('sb-live-n');if(liveN)liveN.textContent=fmtNum(totalDonors);
+  /* nav pct badge */
+  const np=document.getElementById('dppct');if(np)np.textContent=(pct||0)+'%';
+  /* donor wall count badge */
+  const dc=document.getElementById('d-donor-count');if(dc)dc.textContent=fmtNum(totalDonors)+' người';
+  /* thanks badges */
+  setEl('dty1',totalDonors,'');setEl('dty2',totalDonates,'');
+}
+setInterval(()=>syncSidebar(Math.round(totalVND/MAX_VND*100)),1500);
+
+/* ring sync */
+function setRing(pct){
+  const fg=document.getElementById('dRingFg');
+  if(fg){const c=2*Math.PI*38;fg.style.strokeDasharray=c;fg.style.strokeDashoffset=c-(c*pct/100)}
+  const el=document.getElementById('dRingPct');if(el)el.textContent=pct+'%';
+  const vnd=document.getElementById('dRingVnd');if(vnd)vnd.textContent=Math.round(totalVND/1000000).toLocaleString('vi-VN');
+  const mfg=document.getElementById('mRingFg');
+  if(mfg){const c=2*Math.PI*22;mfg.style.strokeDasharray=c;mfg.style.strokeDashoffset=c-(c*pct/100)}
+  const mp=document.getElementById('mRingPct');if(mp)mp.textContent=pct+'%';
+  const mv=document.getElementById('mRingVnd');if(mv)mv.textContent=Math.round(totalVND/1000000).toLocaleString('vi-VN');
+  const hfg=document.getElementById('heroRingFg');
+  if(hfg){const c=2*Math.PI*46;hfg.style.strokeDasharray=c;hfg.style.strokeDashoffset=c-(c*pct/100)}
+  const hp=document.getElementById('heroRingPct');if(hp)hp.textContent=pct+'%';
+}
+setTimeout(()=>{
+  const obs=new MutationObserver(()=>{const p=parseInt(document.getElementById('dppct')?.textContent)||0;setRing(p)});
+  const pf=document.getElementById('dpfill');if(pf)obs.observe(pf,{attributes:true,attributeFilter:['style']});
+},1500);
+
+/* ── DESKTOP card glow ── */
+document.querySelectorAll('.d-bk').forEach(c=>{
+  c.addEventListener('mousemove',function(e){const r=this.getBoundingClientRect();this.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');this.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%')});
+});
+
+/* ── CLICK RIPPLE + SPARKS ── */
+(function(){
+  const style=document.createElement('style');
+  style.textContent=`
+    .rp{position:fixed;pointer-events:none;z-index:9999;border-radius:50%;transform:scale(0);animation:rpA .6s ease-out forwards}
+    @keyframes rpA{0%{transform:scale(0);opacity:.65}100%{transform:scale(4);opacity:0}}
+    .sp{position:fixed;pointer-events:none;z-index:9999;width:4px;height:4px;border-radius:50%;animation:spA .5s ease-out forwards}
+    @keyframes spA{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(0);opacity:0}}
+  `;
+  document.head.appendChild(style);
+  document.addEventListener('click',function(e){
+    const rip=document.createElement('div');rip.className='rp';
+    const sz=Math.random()*28+18;
+    rip.style.cssText=`left:${e.clientX-sz/2}px;top:${e.clientY-sz/2}px;width:${sz}px;height:${sz}px;background:rgba(200,98,42,.3)`;
+    document.body.appendChild(rip);setTimeout(()=>rip.remove(),700);
+    const cols=['#e07840','#c8622a','#f0e8d8','#a855f7','#3dd47a'];
+    for(let i=0;i<6;i++){
+      const sp=document.createElement('div');sp.className='sp';
+      const ang=Math.random()*Math.PI*2,dist=Math.random()*50+18;
+      sp.style.cssText=`left:${e.clientX}px;top:${e.clientY}px;background:${cols[i%cols.length]};--dx:${Math.cos(ang)*dist}px;--dy:${Math.sin(ang)*dist}px;animation-delay:${Math.random()*.1}s`;
+      document.body.appendChild(sp);setTimeout(()=>sp.remove(),600);
+    }
+  });
+})();
+
+/* ── MOBILE TOUCH EFFECTS ── */
+(function(){
+  const vm=document.getElementById('vm');if(!vm)return;
+  // Touch ring
+  vm.addEventListener('touchstart',function(e){
+    const touch=e.touches[0];
+    const ring=document.createElement('div');ring.className='m-touch-ring';
+    const sz=60;ring.style.cssText=`left:${touch.clientX-sz/2}px;top:${touch.clientY-sz/2}px;width:${sz}px;height:${sz}px`;
+    document.body.appendChild(ring);setTimeout(()=>ring.remove(),800);
+  },{passive:true});
+})();
+
+/* ── FALLING LEAVES ── */
+(function(){
+  const canvas=document.createElement('canvas');
+  canvas.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9980';
+  document.body.appendChild(canvas);
+  const ctx=canvas.getContext('2d');let W,H;
+  function resize(){canvas.width=W=innerWidth;canvas.height=H=innerHeight}
+  resize();addEventListener('resize',resize);
+  const LC=['rgba(200,98,42,','rgba(224,120,64,','rgba(168,85,247,','rgba(240,180,80,','rgba(180,70,30,'];
+  const leaves=[];
+  function mkLeaf(){return{x:Math.random()*W,y:-20,size:Math.random()*9+5,rot:Math.random()*Math.PI*2,rotSpd:(Math.random()-.5)*.04,vx:(Math.random()-.5)*1.2,vy:Math.random()*.75+.35,swing:Math.random()*1.5+.5,swingSpd:Math.random()*.02+.01,phase:Math.random()*Math.PI*2,color:LC[Math.floor(Math.random()*LC.length)],alpha:Math.random()*.28+.12,type:Math.floor(Math.random()*3)}}
+  for(let i=0;i<18;i++){const l=mkLeaf();l.y=Math.random()*H;leaves.push(l)}
+  function drawLeaf(l){
+    ctx.save();ctx.translate(l.x,l.y);ctx.rotate(l.rot);ctx.fillStyle=l.color+l.alpha+')';ctx.beginPath();
+    if(l.type===0){ctx.moveTo(0,-l.size);ctx.bezierCurveTo(l.size*.7,-l.size*.4,l.size*.9,l.size*.2,0,l.size*.6);ctx.bezierCurveTo(-l.size*.9,l.size*.2,-l.size*.7,-l.size*.4,0,-l.size)}
+    else if(l.type===1){ctx.ellipse(0,0,l.size*.4,l.size,0,0,Math.PI*2)}
+    else{ctx.moveTo(0,-l.size);ctx.lineTo(l.size*.5,0);ctx.lineTo(0,l.size);ctx.lineTo(-l.size*.5,0)}
+    ctx.fill();ctx.restore();
+  }
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    leaves.forEach((l,i)=>{l.y+=l.vy;l.x+=l.vx+Math.sin(l.phase)*l.swing*.4;l.rot+=l.rotSpd;l.phase+=l.swingSpd;if(l.y>H+20){leaves[i]=mkLeaf()}drawLeaf(l)});
+    if(leaves.length<28&&Math.random()<.003){leaves.push(mkLeaf())}
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+
+/* ── MOBILE SCROLL REVEAL ── */
+(function(){
+  const vm=document.getElementById('vm');if(!vm)return;
+  const targets=vm.querySelectorAll('.m-card,.m-cta-card,.m-perk-chip,.m-ty-card,.m-donor-item,.m-prog-wrap,.m-ticker-wrap,.m-stats');
+  const style=document.createElement('style');
+  style.textContent=`.reveal-hidden{opacity:0;transform:translateY(22px);transition:opacity .55s cubic-bezier(.23,1,.32,1),transform .55s cubic-bezier(.23,1,.32,1)}.reveal-visible{opacity:1;transform:translateY(0)}`;
+  document.head.appendChild(style);
+  targets.forEach(el=>el.classList.add('reveal-hidden'));
+  const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('reveal-visible');obs.unobserve(e.target)}})},{threshold:.12,rootMargin:'0px 0px -30px 0px'});
+  targets.forEach(el=>obs.observe(el));
+})();
+</script>
+</body>
+</html>
